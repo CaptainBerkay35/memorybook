@@ -4,18 +4,7 @@ import { getPosts } from "../../actions/posts";
 import type { RootState } from "../../store/store.tsx";
 import Post from "./Post/Post.tsx";
 import type { AppDispatch } from "../../store/store.tsx";
-
-// PostType'ı burada tanımlıyoruz
-type PostType = {
-  _id: string;
-  creator: string;
-  title: string;
-  message: string;
-  tags: string;
-  selectedFile: string;
-  createdAt: string;
-  likeCount: number;
-};
+import type { PostType } from "../../types/Post.tsx";
 
 export default function Posts() {
   const dispatch: AppDispatch = useDispatch();

@@ -2,17 +2,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createPost } from "../../actions/posts";
 import type { AppDispatch } from "../../store/store.tsx";
-
-type PostData = {
-  creator: string;
-  title: string;
-  message: string;
-  tags: string;
-  selectedFile: string;
-};
+import type { NewPostType } from "../../types/Post.tsx";
 
 export default function Form() {
-  const [postData, setPostData] = useState<PostData>({
+  const [postData, setPostData] = useState<NewPostType>({
     creator: "",
     title: "",
     message: "",

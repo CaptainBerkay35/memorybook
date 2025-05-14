@@ -1,5 +1,6 @@
 import * as api from '../api'; // API isteklerini yaptığın dosya
 import type { Dispatch } from 'redux';
+import type { NewPostType,EditablePostFields } from '../types/Post';
 
 // Tüm postları getir
 export const getPosts = () => async (dispatch: Dispatch) => {
@@ -12,11 +13,20 @@ export const getPosts = () => async (dispatch: Dispatch) => {
 };
 
 // Yeni post oluştur
-export const createPost = (post: any) => async (dispatch: Dispatch) => {
+export const createPost = (post: NewPostType) => async (dispatch: Dispatch) => {
   try {
     const { data } = await api.createPost(post);
     dispatch({ type: 'CREATE', payload: data });
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const updatePost = (id: string, postData: EditablePostFields) => async (dispatch: Dispatch) => {
+  try {
+    const { data } = await api.updatePost(id, postData);
+    dispatch({ type: "UPDATE", payload: data });
+  } catch (error) {
+    console.error("Update post error:", error);
   }
 };
