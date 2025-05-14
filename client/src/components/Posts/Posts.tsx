@@ -1,15 +1,43 @@
-import Post from "./Post/Post.tsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getPosts } from "../../actions/posts";
 import type { RootState } from "../../store/store.tsx";
+import Post from "./Post/Post.tsx";
+import type { AppDispatch } from "../../store/store.tsx";
+
+// PostType'ı burada tanımlıyoruz
+type PostType = {
+  _id: string;
+  creator: string;
+  title: string;
+  message: string;
+  tags: string;
+  selectedFile: string;
+  createdAt: string;
+  likeCount: number;
+};
 
 export default function Posts() {
-  const posts = useSelector((state: RootState) => state.posts);
-  console.log(posts);
+  const dispatch: AppDispatch = useDispatch();
+  const posts = useSelector((state: RootState) => state.posts) as PostType[];
+  console.log("Postlar:", posts);
+
+  useEffect(() => {
+    dispatch(getPosts());  // Sayfa yüklendiğinde tüm postları çek
+  }, [dispatch]);
+
   return (
-    <div>
-      <h1>POSTS</h1>
-      <Post></Post>
-      <Post></Post>
-    </div>
+    <>
+      {!posts.length ? (
+        <div>No posts yet.</div>
+      ) : (
+        <div>
+          {posts.map((post) => (
+            // Her post'u Post bileşenine gönderiyoruz ve tip doğru şekilde belirleniyor
+            <Post key={post._id} post={post} />
+          ))}
+        </div>
+      )}
+    </>
   );
 }
