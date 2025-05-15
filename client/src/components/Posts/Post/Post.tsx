@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { PostType } from "../../../types/Post";
 import { useDispatch } from "react-redux";
-import { updatePost } from "../../../actions/posts";
+import { updatePost, deletePost } from "../../../actions/posts";
 import type { AppDispatch } from "../../../store/store.tsx";
 import EditPostForm from "../../Form/EditPostForm.tsx";
 
@@ -97,7 +97,7 @@ export default function Post({ post }: PostProps) {
               {showDropdown && (
                 <div
                   ref={dropdownRef}
-                  className="absolute w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10"
+                  className="absolute w-40 bg-white border  rounded-md shadow-lg z-10"
                 >
                   <ul className="text-sm text-gray-700">
                     <li
@@ -123,8 +123,13 @@ export default function Post({ post }: PostProps) {
                     <li
                       className="px-4 py-2  cursor-pointer flex items-center gap-2 bg-red-300 hover:bg-red-200"
                       onClick={() => {
-                        alert("Delete action here");
-                        setShowDropdown(false);
+                        const confirmDelete = window.confirm(
+                          "Are you sure you want to delete this post?"
+                        );
+                        if (confirmDelete) {
+                          dispatch(deletePost(post._id));
+                          setShowDropdown(false);
+                        }
                       }}
                     >
                       <svg
