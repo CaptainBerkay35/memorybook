@@ -43,8 +43,8 @@ export const updatePost = async (req, res) => {
   }
 };
 
-export const deletePost = async (req,res) => {
-  const {id: _id} = req.params;
+export const deletePost = async (req, res) => {
+  const { id: _id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(_id)) {
     return res.status(404).send(`No post with id: ${_id}`);
@@ -54,6 +54,29 @@ export const deletePost = async (req,res) => {
     await PostMessage.findByIdAndDelete(_id);
     res.status(200).json({ id: _id, message: "Post deleted successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong while deleting the post." });
+    res
+      .status(500)
+      .json({ message: "Something went wrong while deleting the post." });
   }
-}
+};
+export const likePost = async (req, res) => {
+  const { id: _id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    return res.status(404).send(`No post with id: ${_id}`);
+  }
+
+  try {
+    const post = await PostMessage.findById(_id);
+    const updatedPost = await PostMessage.findByIdAndUpdate(
+      _id,
+      { likeCount: post.likeCount + 1 },
+      { new: true }
+    );
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Something went wrong while deleting the post." });
+  }
+};
