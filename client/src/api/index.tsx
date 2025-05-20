@@ -14,3 +14,5 @@ export const updatePost = (id: string, updatedPost: EditablePostFields) =>
   axios.patch(`${url}/${id}`, updatedPost);
 
 export const deletePost = (id: string) => axios.delete(`${url}/${id}`);
+
+export const likePost = (id:string) => axios.patch(`${url}/${id}/likePost`);

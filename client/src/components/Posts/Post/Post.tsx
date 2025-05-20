@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { PostType } from "../../../types/Post";
 import { useDispatch } from "react-redux";
-import { updatePost, deletePost } from "../../../actions/posts";
+import { updatePost, deletePost, likePost } from "../../../actions/posts";
 import type { AppDispatch } from "../../../store/store.tsx";
 import EditPostForm from "../../Form/EditPostForm.tsx";
 
@@ -168,7 +168,25 @@ export default function Post({ post }: PostProps) {
               <p className="text-gray-600 mb-2">{post.message}</p>
             </div>
             <div className="flex flex-col justify-end items-end">
-              <p className="text-sm text-gray-500 ">Likes: {post.likeCount}</p>
+              <div className="flex items-center gap-2">
+                <button onClick={() => dispatch(likePost(post._id))}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="#000"
+                      d="M9 21h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57l.03-.32c0-.41-.17-.79-.44-1.06L14.17 1L7.58 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2M9 9l4.34-4.34L12 10h9v2l-3 7H9zM1 9h4v12H1z"
+                    />
+                  </svg>
+                </button>
+
+                <p className="text-sm text-gray-500 ">
+                  Likes: {post.likeCount}
+                </p>
+              </div>
               <p className="text-sm text-gray-500 ">Tags: {post.tags}</p>
             </div>
           </div>
