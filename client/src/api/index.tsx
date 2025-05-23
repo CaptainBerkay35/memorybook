@@ -1,18 +1,54 @@
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 import type { EditablePostFields } from "../types/Post";
+import type { AuthFormData } from "../types/Auth";
+import type { NavigateFunction } from "react-router-dom";
 
-const url = 'http://localhost:5000/posts';
-
-export const fetchPosts = async () => {
-    const response = await axios.get(url);
-    return response;
+// Navigation'ı hook dışında kullanmak için
+let navigate: NavigateFunction;
+export const injectNavigate = (nav: NavigateFunction) => {
+  navigate = nav;
 };
 
-export const createPost = (newPost:any) => axios.post(url,newPost);
+const API = axios.create({ baseURL: "http://localhost:5000" });
+
+API.interceptors.request.use((req) => {
+  const userString = localStorage.getItem("user");
+
+  if (userString && req.headers) {
+    const user = JSON.parse(userString) as { token: string };
+    req.headers.Authorization = `Bearer ${user.token}`;
+
+    // Token süresi dolmuş mu kontrolü
+    const decoded: { exp: number } = jwtDecode(user.token);
+    if (decoded.exp * 1000 < new Date().getTime()) {
+      localStorage.removeItem("user");
+      if (navigate) {
+        navigate("/auth");
+      }
+    }
+  }
+
+  return req;
+});
+
+export const fetchPosts = async () => {
+  const response = await API.get("/posts");
+  return response;
+};
+
+export const createPost = (newPost: any) => API.post("/posts", newPost);
 
 export const updatePost = (id: string, updatedPost: EditablePostFields) =>
-  axios.patch(`${url}/${id}`, updatedPost);
+  API.patch(`/posts/${id}`, updatedPost);
 
-export const deletePost = (id: string) => axios.delete(`${url}/${id}`);
+export const deletePost = (id: string) => API.delete(`/posts/${id}`);
 
-export const likePost = (id:string) => axios.patch(`${url}/${id}/likePost`);
+export const likePost = (id: string) => API.patch(`/posts/${id}/likePost`);
+
+export const signIn = (formData: AuthFormData) =>
+  API.post("/user/signin", formData);
+export const signUp = (formData: AuthFormData) =>
+  API.post("/user/signup", formData);
+
+export default API;

@@ -22,7 +22,6 @@ export default function Posts() {
       ) : (
         <div>
           {posts.map((post) => (
-            // Her post'u Post bileşenine gönderiyoruz ve tip doğru şekilde belirleniyor
             <Post key={post._id} post={post} />
           ))}
         </div>

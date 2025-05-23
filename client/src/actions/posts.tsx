@@ -1,4 +1,4 @@
-import * as api from "../api"; // API isteklerini yaptığın dosya
+import * as api from "../api";
 import type { Dispatch } from "redux";
 import type { NewPostType, EditablePostFields } from "../types/Post";
 
