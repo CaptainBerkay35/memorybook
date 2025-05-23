@@ -1,23 +1,28 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, logout } from "../../actions/users";
+import { MemoryBookIcon } from "../../assets/icons";
+import type { RootState } from "../../store/store";
 
 export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsSticky(true); // Eğer sayfa kaydırılmışsa sticky olacak
-      } else {
-        setIsSticky(false); // Sayfa üstte ise sticky olmasın
-      }
+      setIsSticky(window.scrollY > 50);
     };
-
-    // Scroll olayını dinlemek
     window.addEventListener("scroll", handleScroll);
-
-    // Temizlik için eventListener'ı kaldır
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    dispatch(logout());
+  };
 
   return (
     <header
@@ -26,22 +31,46 @@ export default function Header() {
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <nav className="hidden md:flex space-x-6 font-montserrat text-text text-lg font-medium">
-          <div className="flex items-center gap-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="#751a1a"
-                d="M7 17V2h7.875q-.2.475-.288.975T14.5 4H9v10.2q1.125-1.05 2.538-1.625T14.5 12q1.525 0 2.95.588T20 14.225V9.5q.525 0 1.025-.088T22 9.125V17zm-3.4 5.225L1.75 7.35L5 6.95v2l-1 .125L5.35 20l7.45-1h5.45l.15 1.4zM17.675 6.5l1.775-5h1.1l1.8 5h-1.075L20.9 5.4h-1.8l-.375 1.1zm1.675-1.85h1.3L20 2.6zM14.5 14q-.875 0-1.725.25T11.2 15h6.6q-.725-.5-1.575-.75T14.5 14m0-8.5q1.15 0 1.95.8t.8 1.95t-.8 1.95t-1.95.8t-1.95-.8t-.8-1.95t.8-1.95t1.95-.8m0 2q-.325 0-.537.213t-.213.537t.213.538T14.5 9t.538-.213t.212-.537t-.213-.537T14.5 7.5"
-              />
-            </svg>
-            <h1>MemoryBook</h1>
-          </div>
-        </nav>
+        <div className="flex items-center gap-4 font-montserrat text-text text-lg font-medium">
+          <MemoryBookIcon />
+          <h1>MemoryBook</h1>
+        </div>
+        <div>
+          {user ? (
+            <div className="flex items-center gap-4 cursor-pointer select-none">
+              {user.result?.picture || user.picture ? (
+                <img
+                  src={user.result?.picture || user.picture}
+                  alt={user.result?.name || user.name || "User"}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase">
+                  {(user.result?.name || user.name)?.charAt(0).toUpperCase() ||
+                    "U"}
+                </div>
+              )}
+              <h6 className="font-semibold">
+                {user.result?.name || user.name || "User"}
+              </h6>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <nav className="hidden md:flex font-montserrat text-text text-lg font-medium">
+              <Link
+                to="/auth"
+                className="px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:bg-primary-dark transition duration-300"
+              >
+                Login
+              </Link>
+            </nav>
+          )}
+        </div>
       </div>
     </header>
   );

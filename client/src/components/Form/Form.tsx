@@ -6,25 +6,34 @@ import type { NewPostType } from "../../types/Post.tsx";
 
 export default function Form() {
   const [postData, setPostData] = useState<NewPostType>({
-    creator: "",
     title: "",
     message: "",
     tags: "",
     selectedFile: "",
+    name:"",
   });
   const dispatch: AppDispatch = useDispatch();
   const [showSuccess, setShowSuccess] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+  if (!user) {
+    return (
+      <div className="p-8 text-center text-gray-500">
+        You need to be logged in to create a post.
+      </div>
+    );
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(postData); // Burada postData'yı API'ye gönderebilirsin
-    dispatch(createPost(postData));
+    console.log(postData);
+    dispatch(createPost({...postData,name:user?.result?.name}));
     setPostData({
-      creator: "",
       title: "",
       message: "",
       tags: "",
       selectedFile: "",
+      name:"",
     });
     setShowSuccess(true); 
     setTimeout(() => setShowSuccess(false), 3000);
@@ -45,19 +54,6 @@ export default function Form() {
     <div className="p-8">
       <form className="p-4 text-center" onSubmit={handleSubmit}>
         <h2 className="text-lg font-bold mb-4">Create Post</h2>
-
-        <div className="text-left mb-2">
-          <label className="text-xs text-gray-800">Creator</label>
-          <input
-            type="text"
-            name="creator"
-            value={postData.creator}
-            onChange={(e) =>
-              setPostData({ ...postData, creator: e.target.value })
-            }
-            className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md focus:outline-none focus:bg-gray-100 focus:border-gray-600"
-          />
-        </div>
 
         <div className="text-left mb-2">
           <label className="text-xs text-gray-800">Title</label>

@@ -1,9 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import type { PostType } from "../../../types/Post";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updatePost, deletePost, likePost } from "../../../actions/posts";
-import type { AppDispatch } from "../../../store/store.tsx";
+import type { AppDispatch, RootState } from "../../../store/store.tsx";
 import EditPostForm from "../../Form/EditPostForm.tsx";
+import {
+  DeleteIcon,
+  EditIcon,
+  LikeIcon,
+  DropDownIcon,
+  ProfileIconEmpty,
+} from "../../../assets/icons.tsx";
 
 type PostProps = {
   post: PostType;
@@ -14,6 +21,9 @@ export default function Post({ post }: PostProps) {
   const [editMode, setEditMode] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const user = useSelector((state: RootState) => state.user);
+  const hasLikedPost =
+    user && post.likes.includes(user.result?._id || user._id);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,39 +71,20 @@ export default function Post({ post }: PostProps) {
         <>
           <div className=" flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="#000"
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6m0 14c-2.03 0-4.43-.82-6.14-2.88a9.95 9.95 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20"
-                />
-              </svg>
-              <p className="text-base text-gray-500 ">
-                Created by {post.creator}
-              </p>
+              <ProfileIconEmpty />
+              <p className="text-base text-gray-500 ">Created by {post.name}</p>
             </div>
             <div>
-              <button
-                onClick={() => setShowDropdown((prev) => !prev)}
-                className="focus:outline-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="#000"
-                    d="M6 14q-.825 0-1.412-.587T4 12t.588-1.412T6 10t1.413.588T8 12t-.587 1.413T6 14m6 0q-.825 0-1.412-.587T10 12t.588-1.412T12 10t1.413.588T14 12t-.587 1.413T12 14m6 0q-.825 0-1.412-.587T16 12t.588-1.412T18 10t1.413.588T20 12t-.587 1.413T18 14"
-                  />
-                </svg>
-              </button>
-              {/* Dropdown Menü */}
+              {user &&
+                (user.result?._id === post.creator ||
+                  user._id === post.creator) && (
+                  <button
+                    onClick={() => setShowDropdown((prev) => !prev)}
+                    className="focus:outline-none"
+                  >
+                    <DropDownIcon />
+                  </button>
+                )}
               {showDropdown && (
                 <div
                   ref={dropdownRef}
@@ -107,17 +98,7 @@ export default function Post({ post }: PostProps) {
                         setShowDropdown(false);
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="#000"
-                          d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1q-.15.15-.15.36M20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75z"
-                        />
-                      </svg>
+                      <EditIcon />
                       Edit
                     </li>
                     <li
@@ -132,17 +113,7 @@ export default function Post({ post }: PostProps) {
                         }
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill="#000"
-                          d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"
-                        />
-                      </svg>
+                      <DeleteIcon />
                       Delete
                     </li>
                   </ul>
@@ -169,22 +140,21 @@ export default function Post({ post }: PostProps) {
             </div>
             <div className="flex flex-col justify-end items-end">
               <div className="flex items-center gap-2">
-                <button onClick={() => dispatch(likePost(post._id))}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="#000"
-                      d="M9 21h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57l.03-.32c0-.41-.17-.79-.44-1.06L14.17 1L7.58 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2M9 9l4.34-4.34L12 10h9v2l-3 7H9zM1 9h4v12H1z"
-                    />
-                  </svg>
-                </button>
+                {user ? (
+                  <button onClick={() => dispatch(likePost(post._id))}>
+                    <button onClick={() => dispatch(likePost(post._id))}>
+                      <LikeIcon color={hasLikedPost ? "#2563eb" : "#9ca3af"} />{" "}
+                      {/* Tailwind renkleri: blue-600, gray-400 */}
+                    </button>
+                  </button>
+                ) : (
+                  <div>
+                    <LikeIcon color="#999999" />
+                  </div>
+                )}
 
                 <p className="text-sm text-gray-500 ">
-                  Likes: {post.likeCount}
+                  Likes: {post.likes.length}
                 </p>
               </div>
               <p className="text-sm text-gray-500 ">Tags: {post.tags}</p>
