@@ -16,14 +16,6 @@ export default function Form() {
   const [showSuccess, setShowSuccess] = useState(false);
   const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-  if (!user) {
-    return (
-      <div className="p-8 text-center text-gray-500">
-        You need to be logged in to create a post.
-      </div>
-    );
-  }
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(postData);
