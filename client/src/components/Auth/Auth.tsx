@@ -46,22 +46,31 @@ export default function Auth() {
   };
 
   const handleGoogleLogin = async (res: CredentialResponse) => {
-    try {
-      if (!res.credential) {
-        console.log("Google credential yok.");
-        return;
-      }
-
-      const decoded = jwtDecode<User>(res.credential);
-      console.log("Çözümlenen Google verisi:", decoded);
-
-      dispatch(setUser(decoded)); 
-      localStorage.setItem("user", JSON.stringify(decoded));
-      navigate("/");
-    } catch (error) {
-      console.error("Google Login Test Hatası:", error);
+  try {
+    if (!res.credential) {
+      console.log("Google credential yok.");
+      return;
     }
-  };
+
+    const response = await fetch("http://localhost:5000/user/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ credential: res.credential }),
+    });
+
+    if (!response.ok) throw new Error("Google login başarısız.");
+
+    const data = await response.json(); 
+
+    dispatch(setUser(data));
+    localStorage.setItem("user", JSON.stringify(data));
+    navigate("/");
+  } catch (error) {
+    console.error("Google Login Hatası:", error);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-100 px-4">

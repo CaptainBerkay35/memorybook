@@ -142,10 +142,7 @@ export default function Post({ post }: PostProps) {
               <div className="flex items-center gap-2">
                 {user ? (
                   <button onClick={() => dispatch(likePost(post._id))}>
-                    <button onClick={() => dispatch(likePost(post._id))}>
-                      <LikeIcon color={hasLikedPost ? "#2563eb" : "#9ca3af"} />{" "}
-                      {/* Tailwind renkleri: blue-600, gray-400 */}
-                    </button>
+                    <LikeIcon color={hasLikedPost ? "#2563eb" : "#9ca3af"} />
                   </button>
                 ) : (
                   <div>
