@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import {jwtDecode} from "jwt-decode";
 
 import User from "../models/user.js";
 
@@ -57,5 +58,28 @@ export const signup = async (req, res) => {
     res.status(200).json({ result, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong." });
+  }
+};
+
+export const googleSignIn = async (req, res) => {
+  const { credential } = req.body;
+
+  try {
+    const decoded = jwtDecode(credential);
+    const { email, name, sub: googleId } = decoded;
+
+    let existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      existingUser = await User.create({ name, email, googleId });
+    }
+
+    const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, "test", {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ result: existingUser, token });
+  } catch (error) {
+    res.status(500).json({ message: "Google sign-in failed." });
   }
 };
