@@ -1,4 +1,4 @@
-export const MemoryBookIcon = ({ size = 28, color = "#751a1a" }) => (
+export const MemoryBookIcon = ({ size = 32, color = "#751a1a" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -39,24 +39,21 @@ export const EditIcon = () => (
   </svg>
 );
 
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type LikeIconProps = {
-  filled: boolean;       // Kalp dolu mu?
-  onClick?: () => void;  // Tıklama event'i
+  filled: boolean;
+  onClick?: () => void;
 };
 
 export const LikeIcon = ({ filled, onClick }: LikeIconProps) => {
-  // Animasyon durumunu tutuyoruz
   const [animating, setAnimating] = useState(false);
-  // Önceki dolu hali için state (animasyon tetiklemek için)
   const [prevFilled, setPrevFilled] = useState(filled);
 
   useEffect(() => {
     if (filled !== prevFilled) {
       setAnimating(true);
       setPrevFilled(filled);
-      // 600ms sonra animasyonu kapatıyoruz (CSS transition süresiyle uyumlu)
       const timeout = setTimeout(() => setAnimating(false), 600);
       return () => clearTimeout(timeout);
     }
@@ -110,6 +107,63 @@ export const ProfileIconEmpty = () => (
     <path
       fill="#000"
       d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6m0 14c-2.03 0-4.43-.82-6.14-2.88a9.95 9.95 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20"
+    />
+  </svg>
+);
+
+type NewPostIconProps = {
+  size?: number;
+};
+
+export const NewPostIcon = ({ size = 24 }: NewPostIconProps) => {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="transition-transform duration-300 ease-in-out"
+      style={{ width: size, height: size }}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+      >
+        <g
+          fill="none"
+          stroke="#000"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <g
+            style={{
+              transform: hovered ? "rotate(90deg)" : "rotate(0deg)",
+              transformOrigin: "center",
+              transition: "transform 0.3s ease",
+            }}
+          >
+            <line x1="7" y1="12" x2="17" y2="12" />
+            <line x1="12" y1="7" x2="12" y2="17" />
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
+};
+export const CloseIcon = ({ size = 32}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="#000"
+      d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275t.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7t-.7.275t-.7-.275z"
     />
   </svg>
 );
