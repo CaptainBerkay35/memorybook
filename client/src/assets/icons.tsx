@@ -38,19 +38,55 @@ export const EditIcon = () => (
     />
   </svg>
 );
-export const LikeIcon = ({color = "#000"}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-  >
-    <path
-      fill={color}
-      d="M9 21h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57l.03-.32c0-.41-.17-.79-.44-1.06L14.17 1L7.58 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2M9 9l4.34-4.34L12 10h9v2l-3 7H9zM1 9h4v12H1z"
-    />
-  </svg>
-);
+
+import  { useEffect, useState } from "react";
+
+type LikeIconProps = {
+  filled: boolean;       // Kalp dolu mu?
+  onClick?: () => void;  // Tıklama event'i
+};
+
+export const LikeIcon = ({ filled, onClick }: LikeIconProps) => {
+  // Animasyon durumunu tutuyoruz
+  const [animating, setAnimating] = useState(false);
+  // Önceki dolu hali için state (animasyon tetiklemek için)
+  const [prevFilled, setPrevFilled] = useState(filled);
+
+  useEffect(() => {
+    if (filled !== prevFilled) {
+      setAnimating(true);
+      setPrevFilled(filled);
+      // 600ms sonra animasyonu kapatıyoruz (CSS transition süresiyle uyumlu)
+      const timeout = setTimeout(() => setAnimating(false), 600);
+      return () => clearTimeout(timeout);
+    }
+  }, [filled, prevFilled]);
+
+  return (
+    <svg
+      onClick={onClick}
+      xmlns="http://www.w3.org/2000/svg"
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      className="cursor-pointer"
+    >
+      <path
+        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 
+           4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 
+           19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+        fill={filled ? "#ef4444" : "none"}
+        stroke="#ef4444"
+        strokeWidth="2"
+        style={{
+          transition: animating ? "fill 0.6s ease" : "none",
+          pointerEvents: "auto",
+        }}
+      />
+    </svg>
+  );
+};
+
 export const DropDownIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
