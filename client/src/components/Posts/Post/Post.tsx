@@ -57,108 +57,114 @@ export default function Post({ post }: PostProps) {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg border border-gray-300 mb-6">
+    <div className="bg-white rounded-lg mb-6 p-4 md:p-6">
       {editMode ? (
-        <>
-          <EditPostForm
-            formData={formData}
-            setFormData={setFormData}
-            onSave={handleSave}
-            onCancel={() => setEditMode(false)}
-          />
-        </>
+        <EditPostForm
+          formData={formData}
+          setFormData={setFormData}
+          onSave={handleSave}
+          onCancel={() => setEditMode(false)}
+        />
       ) : (
         <>
-          <div className=" flex items-center justify-between mb-4">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <ProfileIconEmpty />
-              <p className="text-base text-gray-500 ">Created by {post.name}</p>
+              <p className="text-sm md:text-base text-gray-500">{post.name}</p>
             </div>
-            <div>
-              {user &&
-                (user.result?._id === post.creator ||
-                  user._id === post.creator) && (
+            {user &&
+              (user.result?._id === post.creator ||
+                user._id === post.creator) && (
+                <div className="relative">
                   <button
-                    onClick={() => setShowDropdown((prev) => !prev)}
+                    onClick={() => setShowDropdown(!showDropdown)}
                     className="focus:outline-none"
                   >
                     <DropDownIcon />
                   </button>
-                )}
-              {showDropdown && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute w-40 bg-white border  rounded-md shadow-lg z-10"
-                >
-                  <ul className="text-sm text-gray-700">
-                    <li
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                      onClick={() => {
-                        setEditMode(true);
-                        setShowDropdown(false);
-                      }}
+                  {showDropdown && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10"
                     >
-                      <EditIcon />
-                      Edit
-                    </li>
-                    <li
-                      className="px-4 py-2  cursor-pointer flex items-center gap-2 bg-red-300 hover:bg-red-200"
-                      onClick={() => {
-                        const confirmDelete = window.confirm(
-                          "Are you sure you want to delete this post?"
-                        );
-                        if (confirmDelete) {
-                          dispatch(deletePost(post._id));
-                          setShowDropdown(false);
-                        }
-                      }}
-                    >
-                      <DeleteIcon />
-                      Delete
-                    </li>
-                  </ul>
+                      <ul className="text-sm text-gray-700">
+                        <li
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                          onClick={() => {
+                            setEditMode(true);
+                            setShowDropdown(false);
+                          }}
+                        >
+                          <EditIcon />
+                          Edit
+                        </li>
+                        <li
+                          className="px-4 py-2 cursor-pointer flex items-center gap-2 bg-red-300 hover:bg-red-200"
+                          onClick={() => {
+                            const confirmDelete = window.confirm(
+                              "Are you sure you want to delete this post?"
+                            );
+                            if (confirmDelete) {
+                              dispatch(deletePost(post._id));
+                              setShowDropdown(false);
+                            }
+                          }}
+                        >
+                          <DeleteIcon />
+                          Delete
+                        </li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
           </div>
-          <div>
-            <div>
-              <img
-                src={post.selectedFile}
-                alt={post.title}
-                className="w-full h-96 object-cover mb-4 rounded-lg shadow-sm"
-              />
+
+          {/* Image Section */}
+          <div className="relative rounded-lg overflow-hidden mb-4 aspect-[16/9] border border-gray-300">
+            <img
+              src={post.selectedFile}
+              alt={post.title}
+              className="w-full h-full object-cover"
+            />
+            {post.tags && (
+              <div className="absolute top-2 left-2">
+                <span className="bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+                  #{post.tags}
+                </span>
+              </div>
+            )}
+            <div className="absolute top-2 right-2 flex items-center gap-1">
+              <button
+                onClick={() => dispatch(likePost(post._id))}
+                className="bg-white rounded-full p-1 md:p-2 shadow-md hover:bg-gray-100 transition-colors flex items-center gap-1"
+              >
+                <LikeIcon
+                  filled={hasLikedPost}
+                  onClick={() => dispatch(likePost(post._id))}
+                />
+                <p className="text-sm md:text-base text-gray-600">
+                  {post.likes.length}
+                </p>
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <h2 className="text-2xl font-semibold text-gray-800">
+          {/* Content Section */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <div className="flex-1">
+              <h2 className="text-lg md:text-xl font-semibold text-gray-800 break-words">
                 {post.title}
               </h2>
-              <p className="text-gray-600 mb-2">{post.message}</p>
-            </div>
-            <div className="flex flex-col justify-end items-end">
-              <div className="flex items-center gap-2">
-                {user ? (
-                  <button onClick={() => dispatch(likePost(post._id))}>
-                    <LikeIcon color={hasLikedPost ? "#2563eb" : "#9ca3af"} />
-                  </button>
-                ) : (
-                  <div>
-                    <LikeIcon color="#999999" />
-                  </div>
-                )}
-
-                <p className="text-sm text-gray-500 ">
-                  Likes: {post.likes.length}
-                </p>
-              </div>
-              <p className="text-sm text-gray-500 ">Tags: {post.tags}</p>
+              <p className="text-sm md:text-base text-gray-600 mt-2 break-words whitespace-pre-line">
+                {post.message}
+              </p>
             </div>
           </div>
         </>
       )}
+      <hr className="mt-6 border-t border-gray-200" />
     </div>
   );
 }
