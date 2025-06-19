@@ -11,6 +11,7 @@ import {
   DropDownIcon,
   ProfileIconEmpty,
 } from "../../../assets/icons.tsx";
+import { Link } from "react-router-dom";
 
 type PostProps = {
   post: PostType;
@@ -69,10 +70,13 @@ export default function Post({ post }: PostProps) {
         <>
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
+            <Link
+              to={`/profile/${post.creator}`}
+              className="flex items-center gap-2 hover:underline"
+            >
               <ProfileIconEmpty />
               <p className="text-sm md:text-base text-gray-500">{post.name}</p>
-            </div>
+            </Link>
             {user &&
               (user.result?._id === post.creator ||
                 user._id === post.creator) && (

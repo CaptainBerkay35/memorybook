@@ -28,7 +28,6 @@ export const createPost = async (req, res) => {
   }
 };
 
-
 export const updatePost = async (req, res) => {
   const { id: _id } = req.params;
   const postData = req.body;
@@ -42,17 +41,20 @@ export const updatePost = async (req, res) => {
 
     // Kullanıcı, bu postun sahibi mi?
     if (existingPost.creator !== req.userId) {
-      return res.status(403).json({ message: "Unauthorized to update this post." });
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to update this post." });
     }
 
-    const updatedPost = await PostMessage.findByIdAndUpdate(_id, postData, { new: true });
+    const updatedPost = await PostMessage.findByIdAndUpdate(_id, postData, {
+      new: true,
+    });
     res.status(200).json(updatedPost);
   } catch (error) {
     console.error("Update error:", error);
     res.status(500).json({ message: error.message });
   }
 };
-
 
 export const deletePost = async (req, res) => {
   const { id: _id } = req.params;
@@ -66,13 +68,17 @@ export const deletePost = async (req, res) => {
 
     // Kullanıcı, bu postun sahibi mi?
     if (existingPost.creator !== req.userId) {
-      return res.status(403).json({ message: "Unauthorized to delete this post." });
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to delete this post." });
     }
 
     await PostMessage.findByIdAndDelete(_id);
     res.status(200).json({ id: _id, message: "Post deleted successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong while deleting the post." });
+    res
+      .status(500)
+      .json({ message: "Something went wrong while deleting the post." });
   }
 };
 
@@ -109,4 +115,24 @@ export const likePost = async (req, res) => {
       .json({ message: "Something went wrong while liking the post." });
   }
 };
+export const getPostsByUser = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const userPosts = await PostMessage.find({ creator: id });
+    res.status(200).json(userPosts);
+  } catch (error) {
+    res.status(404).json({ message: "User posts not found" });
+  }
+};
+export const getLikedPosts = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // likes array'inde userId olan tüm postları bul
+    const likedPosts = await PostMessage.find({ likes: userId });
+    res.status(200).json(likedPosts);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch liked posts." });
+  }
+};

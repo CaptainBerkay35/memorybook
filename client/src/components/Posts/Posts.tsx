@@ -8,11 +8,10 @@ import type { PostType } from "../../types/Post.tsx";
 
 export default function Posts() {
   const dispatch: AppDispatch = useDispatch();
-  const posts = useSelector((state: RootState) => state.posts) as PostType[];
-  console.log("Postlar:", posts);
+  const posts = useSelector((state: RootState) => state.posts?.all || []); // 👈 varsayılan değer verdik
 
   useEffect(() => {
-    dispatch(getPosts());  // Sayfa yüklendiğinde tüm postları çek
+    dispatch(getPosts());
   }, [dispatch]);
 
   return (
@@ -21,7 +20,7 @@ export default function Posts() {
         <div>No posts yet.</div>
       ) : (
         <div>
-          {posts.map((post) => (
+          {posts.map((post: PostType) => (
             <Post key={post._id} post={post} />
           ))}
         </div>

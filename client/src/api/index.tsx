@@ -50,5 +50,13 @@ export const signIn = (formData: AuthFormData) =>
   API.post("/user/signin", formData);
 export const signUp = (formData: AuthFormData) =>
   API.post("/user/signup", formData);
+export const fetchPostsByUser = (userId: string) =>
+  API.get(`/posts/user/${userId}`);
+export const fetchLikedPosts = (userId: string) =>
+  API.get(`/posts/liked/${userId}`);
+export const fetchUserById = (userId: string) =>
+  API.get(`/user/${userId}`);
+
+
 
 export default API;

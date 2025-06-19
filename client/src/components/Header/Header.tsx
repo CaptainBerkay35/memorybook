@@ -44,14 +44,21 @@ export default function Header() {
 
   return (
     <header
-  className={`sticky top-0 z-50 bg-white bg-opacity-80 transition-all duration-300 ease-in-out ${
-    isSticky ? "after:content-[''] after:absolute after:inset-0 after:backdrop-blur-md after:-z-10" : ""
-  }`}
->
+      className={`sticky top-0 z-50 bg-white bg-opacity-80 transition-all duration-300 ease-in-out ${
+        isSticky
+          ? "after:content-[''] after:absolute after:inset-0 after:backdrop-blur-md after:-z-10"
+          : ""
+      }`}
+    >
       <div className="container mx-auto px-4 py-2 md:py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2 md:gap-4 font-montserrat text-text text-base md:text-lg font-medium">
-          <MemoryBookIcon />
-          <h1>MemoryBook</h1>
+        <div>
+          <Link
+            to="/"
+            className="flex items-center gap-2 md:gap-4 font-montserrat text-text text-base md:text-lg font-medium"
+          >
+            <MemoryBookIcon />
+            <h1>MemoryBook</h1>
+          </Link>
         </div>
 
         <div>
@@ -79,7 +86,13 @@ export default function Header() {
                 </h6>
               </div>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-white shadow-md rounded-md overflow-hidden z-50">
+                <div className="absolute left-0 mt-8 w-42 bg-white shadow-md rounded-md overflow-hidden z-50">
+                  <Link
+                    to={`/profile/${user.result?._id || user._id}`}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-red-100 font-medium"
+                  >
+                    Profile
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-red-100 text-red-600 font-medium"

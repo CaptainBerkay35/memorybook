@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {jwtDecode} from "jwt-decode";
+import mongoose from "mongoose";
+
 
 import User from "../models/user.js";
 
@@ -81,5 +83,23 @@ export const googleSignIn = async (req, res) => {
     res.status(200).json({ result: existingUser, token });
   } catch (error) {
     res.status(500).json({ message: "Google sign-in failed." });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({ message: "Invalid user ID" });
+
+    const user = await User.findById(id).select("-password");
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

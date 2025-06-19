@@ -1,6 +1,7 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
 import HomePage from "./pages/HomePage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "./actions/users.tsx";
@@ -26,8 +27,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />}></Route>
-      <Route path="/auth" element={<AuthPage />}></Route>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/profile/:id" element={<ProfilePage />} /> 
     </Routes>
   );
 }
