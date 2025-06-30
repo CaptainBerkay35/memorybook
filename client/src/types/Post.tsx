@@ -4,7 +4,7 @@ export type PostType = {
   message: string;
   name: string;
   creator: string;
-  tags: string;
+  tags: string[]; 
   selectedFile: string;
   likes: string[];
   createdAt?: string;
@@ -12,14 +12,15 @@ export type PostType = {
 export type NewPostType = {
   title: string;
   message: string;
-  tags: string;
+  tags: string[]; 
   selectedFile: string;
   name: string;
 };
 
+
 export type EditablePostFields = {
   title: string;
   message: string;
-  tags: string;
+  tags: string[]; 
   selectedFile: string;
 };

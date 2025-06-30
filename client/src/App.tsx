@@ -2,6 +2,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import HomePage from "./pages/HomePage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
+import TagPage from "./pages/TagPage.tsx";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "./actions/users.tsx";
@@ -30,6 +31,8 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/profile/:id" element={<ProfilePage />} /> 
+      <Route path="/tags/:tag" element={<TagPage />} />
+
     </Routes>
   );
 }

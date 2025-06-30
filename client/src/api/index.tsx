@@ -56,6 +56,9 @@ export const fetchLikedPosts = (userId: string) =>
   API.get(`/posts/liked/${userId}`);
 export const fetchUserById = (userId: string) =>
   API.get(`/user/${userId}`);
+export const fetchPostsByTag = (tag: string) =>
+  API.get(`/posts/tag/${encodeURIComponent(tag)}`);
+
 
 
 

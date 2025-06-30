@@ -80,7 +80,7 @@ export default function Post({ post }: PostProps) {
             {user &&
               (user.result?._id === post.creator ||
                 user._id === post.creator) && (
-                <div className="relative">
+                <div className="relative max-h-[24px]">
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
                     className="focus:outline-none"
@@ -132,13 +132,21 @@ export default function Post({ post }: PostProps) {
               alt={post.title}
               className="w-full h-full object-cover"
             />
-            {post.tags && (
-              <div className="absolute top-2 left-2">
-                <span className="bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-                  #{post.tags}
-                </span>
+            {post.tags && post.tags.length > 0 && (
+              <div className="absolute top-2 left-2 flex flex-wrap gap-2 max-w-[90%]">
+                {post.tags.map((tag) => (
+                  <Link
+                    to={`/tags/${tag}`}
+                    key={tag}
+                    className="bg-gray-600 bg-opacity-90 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md
+                 hover:bg-gray-700 transition-colors duration-200 ease-in-out whitespace-nowrap"
+                  >
+                    {tag}
+                  </Link>
+                ))}
               </div>
             )}
+
             <div className="absolute top-2 right-2 flex items-center gap-1">
               <button
                 onClick={() => dispatch(likePost(post._id))}
