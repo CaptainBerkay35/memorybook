@@ -16,7 +16,7 @@ export default function Form({ isOpen, onClose }: Props) {
     message: "",
     tags: [],
     selectedFile: "",
-    name: "",
+    nickname: "",
   });
   const dispatch: AppDispatch = useDispatch();
   const [showSuccess, setShowSuccess] = useState(false);
@@ -47,13 +47,13 @@ export default function Form({ isOpen, onClose }: Props) {
       alert("You can select up to 3 tags only.");
       return;
     }
-    dispatch(createPost({ ...postData, name: user?.result?.name }));
+    dispatch(createPost({ ...postData, nickname: user?.result?.nickname }));
     setPostData({
       title: "",
       message: "",
       tags: [],
       selectedFile: "",
-      name: "",
+      nickname: "",
     });
 
     setShowSuccess(true);

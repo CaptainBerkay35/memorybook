@@ -35,7 +35,7 @@ export const signin = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { email, password, confirmPassword, firstName, lastName } = req.body;
+  const { email, password, confirmPassword, nickname } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -50,7 +50,7 @@ export const signup = async (req, res) => {
     const result = await User.create({
       email,
       password: hashedPassword,
-      name: `${firstName} ${lastName}`,
+      nickname,
     });
 
     const token = jwt.sign({ email: result.email, id: result._id }, "test", {
@@ -73,7 +73,7 @@ export const googleSignIn = async (req, res) => {
     let existingUser = await User.findOne({ email });
 
     if (!existingUser) {
-      existingUser = await User.create({ name, email, googleId });
+      existingUser = await User.create({  nickname: name, email, googleId });
     }
 
     const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, "test", {

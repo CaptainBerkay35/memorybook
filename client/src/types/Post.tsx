@@ -2,7 +2,7 @@ export type PostType = {
   _id: string;
   title: string;
   message: string;
-  name: string;
+  nickname: string;
   creator: string;
   tags: string[]; 
   selectedFile: string;
@@ -14,7 +14,7 @@ export type NewPostType = {
   message: string;
   tags: string[]; 
   selectedFile: string;
-  name: string;
+  nickname: string;
 };
 
 

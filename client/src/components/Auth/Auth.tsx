@@ -13,13 +13,11 @@ import type { AuthFormData } from "../../types/Auth";
 import { signin, signup } from "../../actions/auth";
 
 const initialState: AuthFormData = {
-  firstName: "",
-  lastName: "",
+  nickname: "",
   email: "",
   password: "",
   confirmPassword: "",
 };
-
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch: AppDispatch = useDispatch();
@@ -84,25 +82,15 @@ export default function Auth() {
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           {isSignUp && (
-            <div className="flex items-center gap-2">
-              <InputField
-                label="İsim"
-                name="firstName"
-                type="text"
-                placeholder="Adınızı girin"
-                required
-                onChange={handleChange}
-              />
-              <InputField
-                label="Soyad"
-                name="lastName"
-                type="text"
-                placeholder="Soyadınızı girin"
-                required
-                onChange={handleChange}
-              />
-            </div>
-          )}
+  <InputField
+    label="Kullanıcı Adı"
+    name="nickname"
+    type="text"
+    placeholder="Bir kullanıcı adı girin"
+    required
+    onChange={handleChange}
+  />
+)}
           <InputField
             label="E-posta"
             name="email"

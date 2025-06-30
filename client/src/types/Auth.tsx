@@ -1,6 +1,5 @@
 export type AuthFormData = {
-  firstName: string;
-  lastName: string;
+  nickname:string;
   email: string;
   password: string;
   confirmPassword: string;

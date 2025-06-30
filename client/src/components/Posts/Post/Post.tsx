@@ -88,7 +88,7 @@ export default function Post({
               className="flex items-center gap-2 hover:underline"
             >
               <ProfileIconEmpty />
-              <p className="text-sm md:text-base text-gray-500">{post.name}</p>
+              <p className="text-sm md:text-base text-gray-500">{post.nickname}</p>
             </Link>
             {user &&
               (user.result?._id === post.creator ||
