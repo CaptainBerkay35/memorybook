@@ -5,15 +5,22 @@ import { getPostsByTag } from "../actions/posts";
 import type { AppDispatch, RootState } from "../store/store";
 import Post from "../components/Posts/Post/Post";
 import MainLayout from "../layout/MainLayout";
+import type { PostType } from "../types/Post";
+import PostModal from "../components/Posts/Post/PostModal.tsx"; 
+
 
 export default function TagPage() {
   const { tag } = useParams();
   const dispatch: AppDispatch = useDispatch();
   const posts = useSelector((state: RootState) => state.posts.filteredByTag);
-    const lastPostCreatedAt = useSelector((state: RootState) => state.posts.lastPostCreatedAt);
-
+  const lastPostCreatedAt = useSelector(
+    (state: RootState) => state.posts.lastPostCreatedAt
+  );
+  const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (tag) {
@@ -22,9 +29,9 @@ export default function TagPage() {
 
       dispatch(getPostsByTag(tag)).finally(() => setIsLoading(false));
     }
-  }, [dispatch, tag,lastPostCreatedAt]);
+  }, [dispatch, tag, lastPostCreatedAt]);
 
-  return (
+ return (
     <MainLayout>
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-4">{tag} tagged Posts</h2>
@@ -44,11 +51,21 @@ export default function TagPage() {
             "
           >
             {posts.map((post) => (
-              <Post key={post._id} post={post} />
-            ))}
+        <Post
+          key={post._id}
+          post={post}
+          onPostClick={() => setSelectedPostId(post._id)}
+        />
+      ))}
           </div>
         )}
       </div>
+
+      {selectedPostId && (
+      <PostModal postId={selectedPostId} onClose={() => setSelectedPostId(null)} />
+    )}
+
+   
     </MainLayout>
   );
 }
