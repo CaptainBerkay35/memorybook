@@ -12,6 +12,9 @@ const userProfileReducer = (state = initialState, action: any) => {
       return { profile: action.payload, loading: false, error: null };
     case "FETCH_USER_PROFILE_FAILURE":
       return { ...state, loading: false, error: action.payload };
+      case "UPDATE_USER_PROFILE":
+  return { ...state, profile: action.payload };
+
     default:
       return state;
   }
