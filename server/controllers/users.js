@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import {jwtDecode} from "jwt-decode";
 import mongoose from "mongoose";
 
-
+import PostMessage from "../models/postMessage.js";
 import User from "../models/user.js";
 
 export const signin = async (req, res) => {
@@ -101,5 +101,32 @@ export const getUserById = async (req, res) => {
   } catch (error) {
     console.error("Error fetching user by ID:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+export const updateNickname = async (req, res) => {
+  const { id } = req.params;
+  const { nickname } = req.body;
+
+  try {
+    // 1. Kullanıcıyı güncelle
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { nickname },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) 
+      return res.status(404).json({ message: "User not found." });
+
+    // 2. Kullanıcının tüm postlarındaki nickname alanını güncelle
+    await PostMessage.updateMany(
+      { creator: id },
+      { $set: { nickname } }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Nickname update failed:", error);
+    res.status(500).json({ message: "Failed to update nickname." });
   }
 };

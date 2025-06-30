@@ -58,7 +58,8 @@ export const fetchUserById = (userId: string) =>
   API.get(`/user/${userId}`);
 export const fetchPostsByTag = (tag: string) =>
   API.get(`/posts/tag/${encodeURIComponent(tag)}`);
-
+export const updateNickname = (id: string, nickname: string) =>
+  API.patch(`/user/${id}/update-nickname`, { nickname });
 
 
 
