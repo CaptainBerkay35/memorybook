@@ -4,7 +4,7 @@ import { createPost } from "../../actions/posts";
 import type { AppDispatch } from "../../store/store.tsx";
 import type { NewPostType } from "../../types/Post.tsx";
 import { CloseIcon } from "../../assets/icons.tsx";
-
+import TagsMultiSelect from "./TagMultiSelect.tsx";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -14,7 +14,7 @@ export default function Form({ isOpen, onClose }: Props) {
   const [postData, setPostData] = useState<NewPostType>({
     title: "",
     message: "",
-    tags: "",
+    tags: [], // 🟢 Artık array
     selectedFile: "",
     name: "",
   });
@@ -39,14 +39,23 @@ export default function Form({ isOpen, onClose }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (postData.tags.length < 1) {
+      alert("Please select at least one tag.");
+      return;
+    }
+    if (postData.tags.length > 3) {
+      alert("You can select up to 3 tags only.");
+      return;
+    }
     dispatch(createPost({ ...postData, name: user?.result?.name }));
     setPostData({
       title: "",
       message: "",
-      tags: "",
+      tags: [],
       selectedFile: "",
       name: "",
     });
+
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
     setTimeout(() => onClose(), 4000);
@@ -107,17 +116,20 @@ export default function Form({ isOpen, onClose }: Props) {
               className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
             />
           </div>
-
           <div className="mb-2">
-            <label className="text-xs text-gray-800">Tags</label>
-            <input
-              type="text"
-              name="tags"
-              value={postData.tags}
-              onChange={(e) =>
-                setPostData({ ...postData, tags: e.target.value })
-              }
-              className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
+            <div className="flex gap-2 items-center mb-1">
+              <label className="text-xs text-gray-800">Tags</label>
+              <span
+                className="text-xs text-gray-600 underline cursor-help "
+                title="You must select at least 1 tag and at most 3 tags."
+              >
+                Tags selection rules
+              </span>
+            </div>
+
+            <TagsMultiSelect
+              selectedTags={postData.tags}
+              onChange={(tags) => setPostData({ ...postData, tags })}
             />
           </div>
 
@@ -133,7 +145,12 @@ export default function Form({ isOpen, onClose }: Props) {
 
           <button
             type="submit"
-            className="p-2 border border-gray-400 bg-gray-200 text-center rounded-md w-full hover:bg-gray-300"
+            disabled={postData.tags.length < 1 || postData.tags.length > 3}
+            className={`p-2 border border-gray-400 rounded-md w-full ${
+              postData.tags.length < 1 || postData.tags.length > 3
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-gray-200 hover:bg-gray-300"
+            }`}
           >
             Submit
           </button>

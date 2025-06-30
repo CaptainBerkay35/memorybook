@@ -136,3 +136,14 @@ export const getLikedPosts = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch liked posts." });
   }
 };
+export const getPostsByTag = async (req, res) => {
+  const { tag } = req.params;
+
+  try {
+    const posts = await PostMessage.find({ tags: tag }); // ← Mongo'da array içinde arar
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch posts by tag." });
+  }
+};
+

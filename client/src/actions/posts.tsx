@@ -75,3 +75,11 @@ export const getLikedPosts = (userId: string) => async (dispatch: Dispatch) => {
     console.error("Liked posts fetch error:", error);
   }
 };
+export const getPostsByTag = (tag: string) => async (dispatch: Dispatch) => {
+  try {
+    const { data } = await api.fetchPostsByTag(tag);
+    dispatch({ type: "FETCH_BY_TAG", payload: data }); // ✅ Doğru action type
+  } catch (error) {
+    console.error("Error fetching posts by tag:", error);
+  }
+};

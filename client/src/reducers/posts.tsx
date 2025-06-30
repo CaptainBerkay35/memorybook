@@ -4,12 +4,16 @@ type PostsState = {
   all: PostType[];
   userPosts: PostType[];
   likedPosts: PostType[];
+  filteredByTag: PostType[];
+  lastPostCreatedAt: number | null; 
 };
 
 const initialState: PostsState = {
   all: [],
   userPosts: [],
   likedPosts: [],
+  filteredByTag: [],
+   lastPostCreatedAt: null,
 };
 
 export default (state = initialState, action: any): PostsState => {
@@ -23,9 +27,15 @@ export default (state = initialState, action: any): PostsState => {
     case "FETCH_LIKED_POSTS":
       return { ...state, likedPosts: action.payload };
 
-    case "CREATE":
-      return { ...state, all: [...state.all, action.payload] };
+    case "FETCH_BY_TAG":
+      return { ...state, filteredByTag: action.payload }; // ✅ eklendi
 
+    case "CREATE":
+      return {
+        ...state,
+        all: [...state.all, action.payload],
+        lastPostCreatedAt: Date.now(),  // Yeni post yaratıldı zaman damgası
+      };
     case "UPDATE":
     case "LIKE":
       return {
@@ -39,6 +49,9 @@ export default (state = initialState, action: any): PostsState => {
         likedPosts: state.likedPosts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         ),
+        filteredByTag: state.filteredByTag.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        ), 
       };
 
     case "DELETE":
@@ -51,14 +64,19 @@ export default (state = initialState, action: any): PostsState => {
         likedPosts: state.likedPosts.filter(
           (post) => post._id !== action.payload
         ),
+        filteredByTag: state.filteredByTag.filter(
+          (post) => post._id !== action.payload
+        ),
       };
 
-    // ✅ Yeni eklenen actionlar
     case "RESET_USER_POSTS":
       return { ...state, userPosts: [] };
 
     case "RESET_LIKED_POSTS":
       return { ...state, likedPosts: [] };
+
+    case "RESET_FILTERED_BY_TAG":
+      return { ...state, filteredByTag: [] };
 
     default:
       return state;
