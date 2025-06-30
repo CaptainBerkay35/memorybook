@@ -30,7 +30,7 @@ export default function ProfilePage() {
     <MainLayout>
       {userProfile && (
         <>
-          <ProfileHeader name={userProfile.name} isOwnProfile={isOwnProfile} />
+          <ProfileHeader name={userProfile.nickname} isOwnProfile={isOwnProfile} />
           <ProfilePostList
             posts={userPosts}
             emptyText="No posts yet."

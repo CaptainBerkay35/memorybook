@@ -76,13 +76,13 @@ export default function Header() {
                   />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase">
-                    {(user.result?.name || user.name)
+                    {(user.result?.nickname || user.nickname)
                       ?.charAt(0)
                       .toUpperCase() || "U"}
                   </div>
                 )}
                 <h6 className="font-semibold text-sm md:text-base">
-                  {user.result?.name || user.name || "User"}
+                  {user.result?.nickname || user.nickname || "User"}
                 </h6>
               </div>
               {dropdownOpen && (
