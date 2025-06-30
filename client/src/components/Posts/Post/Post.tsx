@@ -15,9 +15,17 @@ import { Link } from "react-router-dom";
 
 type PostProps = {
   post: PostType;
+  onPostClick?: () => void;
+  onClose?: () => void;
+  mb?: string;
 };
 
-export default function Post({ post }: PostProps) {
+export default function Post({
+  post,
+  onPostClick,
+  onClose,
+  mb = "mb-6",
+}: PostProps) {
   const dispatch: AppDispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -58,7 +66,12 @@ export default function Post({ post }: PostProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg mb-6 p-4 md:p-6">
+    <div
+      className={`bg-white rounded-lg ${mb} p-4 md:p-6`}
+      onClick={() => {
+        if (onPostClick) onPostClick();
+      }}
+    >
       {editMode ? (
         <EditPostForm
           formData={formData}
@@ -137,6 +150,10 @@ export default function Post({ post }: PostProps) {
                 {post.tags.map((tag) => (
                   <Link
                     to={`/tags/${tag}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onClose) onClose(); // Modal kapatma
+                    }}
                     key={tag}
                     className="bg-gray-600 bg-opacity-90 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md
                  hover:bg-gray-700 transition-colors duration-200 ease-in-out whitespace-nowrap"
@@ -149,7 +166,10 @@ export default function Post({ post }: PostProps) {
 
             <div className="absolute top-2 right-2 flex items-center gap-1">
               <button
-                onClick={() => dispatch(likePost(post._id))}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(likePost(post._id));
+                }}
                 className="bg-white rounded-full p-1 md:p-2 shadow-md hover:bg-gray-100 transition-colors flex items-center gap-1"
               >
                 <LikeIcon

@@ -14,7 +14,7 @@ export default function Form({ isOpen, onClose }: Props) {
   const [postData, setPostData] = useState<NewPostType>({
     title: "",
     message: "",
-    tags: [], // 🟢 Artık array
+    tags: [],
     selectedFile: "",
     name: "",
   });
@@ -78,7 +78,7 @@ export default function Form({ isOpen, onClose }: Props) {
     <div className="fixed inset-0 z-[9999] bg-black bg-opacity-40 flex items-center justify-center p-4">
       <button
         onClick={onClose}
-        className="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold"
+        className="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold z-50"
       >
         <CloseIcon></CloseIcon>
       </button>
