@@ -5,7 +5,6 @@ import { getPostsByTag } from "../actions/posts";
 import type { AppDispatch, RootState } from "../store/store";
 import Post from "../components/Posts/Post/Post";
 import MainLayout from "../layout/MainLayout";
-import type { PostType } from "../types/Post";
 import PostModal from "../components/Posts/Post/PostModal.tsx"; 
 
 
@@ -16,7 +15,6 @@ export default function TagPage() {
   const lastPostCreatedAt = useSelector(
     (state: RootState) => state.posts.lastPostCreatedAt
   );
-  const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);

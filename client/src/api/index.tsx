@@ -58,8 +58,9 @@ export const fetchUserById = (userId: string) =>
   API.get(`/user/${userId}`);
 export const fetchPostsByTag = (tag: string) =>
   API.get(`/posts/tag/${encodeURIComponent(tag)}`);
-export const updateNickname = (id: string, nickname: string) =>
-  API.patch(`/user/${id}/update-nickname`, { nickname });
+export const updateUserProfile = (id: string, payload: { nickname?: string, profilePicture?: string }) =>
+  API.patch(`/user/update-profile/${id}`, payload);
+
 
 
 

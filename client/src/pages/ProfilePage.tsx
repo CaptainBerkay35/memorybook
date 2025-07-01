@@ -34,9 +34,10 @@ useEffect(() => {
         <>
           <ProfileHeader
             name={userProfile.nickname}
+            profilePicture={userProfile.profilePicture}
             isOwnProfile={isOwnProfile}
             userId={userIdToShow}
-          />{" "}
+          />
           <ProfilePostList posts={userPosts} emptyText="No posts yet." />
         </>
       )}

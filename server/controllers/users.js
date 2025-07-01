@@ -103,30 +103,34 @@ export const getUserById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-export const updateNickname = async (req, res) => {
+export const updateUserProfile = async (req, res) => {
   const { id } = req.params;
-  const { nickname } = req.body;
+  const { nickname, profilePicture } = req.body;
 
   try {
-    // 1. Kullanıcıyı güncelle
+    const updateFields = {};
+    if (nickname) updateFields.nickname = nickname;
+    if (profilePicture) updateFields.profilePicture = profilePicture;
+
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { nickname },
+      updateFields,
       { new: true }
     ).select("-password");
 
-    if (!updatedUser) 
+    if (!updatedUser)
       return res.status(404).json({ message: "User not found." });
 
-    // 2. Kullanıcının tüm postlarındaki nickname alanını güncelle
-    await PostMessage.updateMany(
-      { creator: id },
-      { $set: { nickname } }
-    );
+    if (nickname) {
+      await PostMessage.updateMany(
+        { creator: id },
+        { $set: { nickname ,profilePicture} }
+      );
+    }
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.error("Nickname update failed:", error);
-    res.status(500).json({ message: "Failed to update nickname." });
+    console.error("Profile update failed:", error);
+    res.status(500).json({ message: "Failed to update profile." });
   }
 };
