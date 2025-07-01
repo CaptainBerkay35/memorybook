@@ -87,8 +87,18 @@ export default function Post({
               to={`/profile/${post.creator}`}
               className="flex items-center gap-2 hover:underline"
             >
-              <ProfileIconEmpty />
-              <p className="text-sm md:text-base text-gray-500">{post.nickname}</p>
+              {post.profilePicture ? (
+                <img
+                  src={post.profilePicture}
+                  alt={post.nickname}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <ProfileIconEmpty size={40}/>
+              )}
+              <p className="text-sm md:text-base text-gray-500">
+                {post.nickname}
+              </p>
             </Link>
             {user &&
               (user.result?._id === post.creator ||

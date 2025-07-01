@@ -8,6 +8,7 @@ export type PostType = {
   selectedFile: string;
   likes: string[];
   createdAt?: string;
+  profilePicture?: string;
 };
 export type NewPostType = {
   title: string;

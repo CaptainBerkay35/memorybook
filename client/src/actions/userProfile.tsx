@@ -17,26 +17,22 @@ export const getUserProfile = (userId: string) => async (dispatch: any) => {
     });
   }
 };
-export const updateUserNickname = (id: string, nickname: string) => async (dispatch: any) => {
+export const updateUserProfile = (id: string, updates: { nickname?: string; profilePicture?: string }) => async (dispatch: any) => {
   try {
-    const { data } = await api.updateNickname(id, nickname);
+    const { data } = await api.updateUserProfile(id, updates);
 
-    // userProfile güncelle
     dispatch({ type: "UPDATE_USER_PROFILE", payload: data });
 
-    // Eğer güncellenen kullanıcı giriş yapan kullanıcıysa:
     const localUser = JSON.parse(localStorage.getItem("user") || "{}");
     if (localUser?.result?._id === id) {
       localUser.result.nickname = data.nickname;
+      localUser.result.profilePicture = data.profilePicture;
       localStorage.setItem("user", JSON.stringify(localUser));
       dispatch({ type: "SET_USER", payload: localUser });
     }
 
-    // Kullanıcının postlarını tekrar getir, böylece güncellenmiş nickname ile gelir
-    const posts = await dispatch(getPostsByUser(id));
-    // Eğer posts reducer’ında böyle bir yapı yoksa, getPostsByUser’ın sonucu otomatik store’a geçiyordur.
-
+    dispatch(getPostsByUser(id)); 
   } catch (error) {
-    console.error("Nickname güncellenemedi:", error);
+    console.error("Profile update error:", error);
   }
 };

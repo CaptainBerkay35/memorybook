@@ -68,14 +68,14 @@ export default function Header() {
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={() => setDropdownOpen((prev) => !prev)}
               >
-                {user.result?.picture || user.picture ? (
+                {user.result?.profilePicture || user.profilePicture ? (
                   <img
-                    src={user.result?.picture || user.picture}
+                    src={user.result?.profilePicture || user.profilePicture}
                     alt={user.result?.name || user.name || "User"}
-                    className="w-8 h-8 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase">
+                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase">
                     {(user.result?.nickname || user.nickname)
                       ?.charAt(0)
                       .toUpperCase() || "U"}
