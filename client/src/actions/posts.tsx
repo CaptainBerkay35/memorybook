@@ -1,11 +1,10 @@
 import * as api from "../api";
-import type { Dispatch } from "redux";
+import type { Dispatch,AnyAction  } from "redux";
 import type { NewPostType, EditablePostFields } from "../types/Post";
 import type { ThunkDispatch } from "redux-thunk";
 import type { RootState } from "../store/store";
 
 
-// Tüm postları getir
 export const getPosts = () => async (dispatch: Dispatch) => {
   try {
     const { data } = await api.fetchPosts();
@@ -15,7 +14,6 @@ export const getPosts = () => async (dispatch: Dispatch) => {
   }
 };
 
-// Yeni post oluştur
 export const createPost = (post: NewPostType) => async (dispatch: Dispatch) => {
   try {
     const { data } = await api.createPost(post);

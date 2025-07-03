@@ -3,6 +3,7 @@ import Post from "../Posts/Post/Post";
 import PostModal from "../Posts/Post/PostModal";
 import type { PostType } from "../../types/Post";
 
+
 export default function ProfilePostList({
   posts,
   emptyText,
