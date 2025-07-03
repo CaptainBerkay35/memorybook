@@ -34,7 +34,8 @@ export default (state = initialState, action: any): PostsState => {
       return {
         ...state,
         all: [...state.all, action.payload],
-        lastPostCreatedAt: Date.now(),  // Yeni post yaratıldı zaman damgası
+        userPosts: [...state.userPosts, action.payload],
+        lastPostCreatedAt: Date.now(),  
       };
     case "UPDATE":
     case "LIKE":

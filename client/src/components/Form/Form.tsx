@@ -5,6 +5,7 @@ import type { AppDispatch } from "../../store/store.tsx";
 import type { NewPostType } from "../../types/Post.tsx";
 import { CloseIcon } from "../../assets/icons.tsx";
 import TagsMultiSelect from "./TagMultiSelect.tsx";
+import ImageUpload from "../ImageInput/ImageUpload.tsx";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -61,17 +62,6 @@ export default function Form({ isOpen, onClose }: Props) {
     setTimeout(() => onClose(), 4000);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setPostData({ ...postData, selectedFile: reader.result as string });
-      };
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -103,7 +93,6 @@ export default function Form({ isOpen, onClose }: Props) {
               className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
             />
           </div>
-
           <div className="mb-2">
             <label className="text-xs text-gray-800">Message</label>
             <input
@@ -117,15 +106,14 @@ export default function Form({ isOpen, onClose }: Props) {
             />
           </div>
           <div className="mb-4">
-            <label className="text-xs text-gray-800">Upload Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="block mt-1 "
+            <ImageUpload
+              value={postData.selectedFile}
+              onChange={(base64) =>
+                setPostData({ ...postData, selectedFile: base64 })
+              }
             />
           </div>
-           <div className="mb-2">
+          <div className="mb-2">
             <div className="flex gap-2 items-center mb-1">
               <label className="text-xs text-gray-800">Tags</label>
               <span
@@ -135,13 +123,11 @@ export default function Form({ isOpen, onClose }: Props) {
                 Tags selection rules
               </span>
             </div>
-
             <TagsMultiSelect
               selectedTags={postData.tags}
               onChange={(tags) => setPostData({ ...postData, tags })}
             />
           </div>
-
           <button
             type="submit"
             disabled={postData.tags.length < 1 || postData.tags.length > 3}
@@ -153,7 +139,6 @@ export default function Form({ isOpen, onClose }: Props) {
           >
             Submit
           </button>
-
           {showSuccess && (
             <div className="mt-4 text-green-600 font-medium text-center animate-fade-in">
               Post created successfully!

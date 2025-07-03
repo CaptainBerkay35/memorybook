@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { EditIcon } from "../../../assets/icons";
 import DeleteAccountButton from "./DeleteAccountButton.tsx";
+import ImageUpload from "../../ImageInput/ImageUpload.tsx";
 
 type Props = {
   currentNickname: string;
@@ -21,15 +22,6 @@ export default function EditProfileModal({
   );
   const [openEdit, setOpenEdit] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => setProfilePicture(reader.result as string);
-    reader.readAsDataURL(file);
-  };
-
   function openEditFunction() {
     setOpenEdit(true);
   }
@@ -44,20 +36,12 @@ export default function EditProfileModal({
         className="bg-white rounded-lg p-6 w-full max-w-sm"
       >
         <h2 className="text-lg font-semibold mb-4">Edit Profile</h2>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="mb-4"
+
+        <ImageUpload
+          value={profilePicture || ""}
+          onChange={(base64) => setProfilePicture(base64)}
         />
 
-        {profilePicture && (
-          <img
-            src={profilePicture}
-            alt="Preview"
-            className="w-20 h-20 rounded-full object-cover mb-4 mx-auto"
-          />
-        )}
         <div className="flex gap-2 items-center justify-center mb-2">
           <p>{nickname}</p>
           <button onClick={openEditFunction}>
@@ -75,6 +59,7 @@ export default function EditProfileModal({
             autoFocus
           />
         )}
+
         <div className="my-4 border-t pt-4">
           <DeleteAccountButton />
         </div>
