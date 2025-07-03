@@ -134,3 +134,19 @@ export const updateUserProfile = async (req, res) => {
     res.status(500).json({ message: "Failed to update profile." });
   }
 };
+export const deleteAccount = async (req, res) => {
+  try {
+    if (req.userId !== req.params.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    await User.findByIdAndDelete(req.params.id);
+    await PostMessage.deleteMany({ creator: req.params.id });
+
+    res.status(200).json({ message: "Account deleted successfully." });
+  } catch (error) {
+    console.error("Delete Account Error:", error);
+    res.status(500).json({ message: "Failed to delete account." });
+  }
+};
+

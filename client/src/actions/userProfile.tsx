@@ -36,3 +36,17 @@ export const updateUserProfile = (id: string, updates: { nickname?: string; prof
     console.error("Profile update error:", error);
   }
 };
+
+export const deleteUserAccount = (id: string) => async (dispatch: any) => {
+  try {
+    await api.deleteAccount(id);
+
+    // Kullanıcı localStorage'dan siliniyor
+    localStorage.removeItem("user");
+    dispatch({ type: "LOGOUT" });
+
+    // İsteğe bağlı: Başka işlemler yapılabilir (redirect vs.)
+  } catch (error) {
+    console.error("Account deletion error:", error);
+  }
+};

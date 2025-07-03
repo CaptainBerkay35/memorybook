@@ -60,6 +60,8 @@ export const fetchPostsByTag = (tag: string) =>
   API.get(`/posts/tag/${encodeURIComponent(tag)}`);
 export const updateUserProfile = (id: string, payload: { nickname?: string, profilePicture?: string }) =>
   API.patch(`/user/update-profile/${id}`, payload);
+export const deleteAccount = (id: string) =>
+  API.delete(`/user/${id}`);
 
 
 

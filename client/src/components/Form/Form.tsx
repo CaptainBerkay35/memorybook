@@ -116,7 +116,16 @@ export default function Form({ isOpen, onClose }: Props) {
               className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
             />
           </div>
-          <div className="mb-2">
+          <div className="mb-4">
+            <label className="text-xs text-gray-800">Upload Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block mt-1 "
+            />
+          </div>
+           <div className="mb-2">
             <div className="flex gap-2 items-center mb-1">
               <label className="text-xs text-gray-800">Tags</label>
               <span
@@ -130,16 +139,6 @@ export default function Form({ isOpen, onClose }: Props) {
             <TagsMultiSelect
               selectedTags={postData.tags}
               onChange={(tags) => setPostData({ ...postData, tags })}
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="text-xs text-gray-800">Upload Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="block mt-1"
             />
           </div>
 
