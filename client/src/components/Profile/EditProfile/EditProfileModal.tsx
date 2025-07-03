@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { EditIcon } from "../../assets/icons";
+import { EditIcon } from "../../../assets/icons";
+import DeleteAccountButton from "./DeleteAccountButton.tsx";
 
 type Props = {
   currentNickname: string;
@@ -74,6 +75,9 @@ export default function EditProfileModal({
             autoFocus
           />
         )}
+        <div className="my-4 border-t pt-4">
+          <DeleteAccountButton />
+        </div>
 
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">

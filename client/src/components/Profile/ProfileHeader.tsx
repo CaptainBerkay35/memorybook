@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EditProfileModal from "./EditProfileModal";
+import EditProfileModal from "./EditProfile/EditProfileModal.tsx";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../store/store";
 import { updateUserProfile } from "../../actions/userProfile";
