@@ -1,12 +1,10 @@
 import mongoose from "mongoose";
 import PostMessage from "../models/postMessage.js";
-import User from "../models/user.js"; 
-
+import User from "../models/user.js";
 
 export const getPosts = async (req, res) => {
   try {
-    const postMessages = await PostMessage.find();
-
+    const postMessages = await PostMessage.find().sort({ createdAt: -1 });
     res.status(200).json(postMessages);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -166,12 +164,12 @@ export const getPostsByUserInterests = async (req, res) => {
       return res.status(200).json([]); // İlgi alanı yoksa boş dön
     }
 
-    const posts = await PostMessage.find({ tags: { $in: interests } });
-
+    const posts = await PostMessage.find({ tags: { $in: interests } }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(posts);
   } catch (error) {
     console.error("Error fetching posts by interests:", error);
     res.status(500).json({ message: "Failed to fetch posts by interests." });
   }
 };
-
