@@ -1,6 +1,13 @@
-// types/User.ts
-export interface User {
-  name: string;
+export type User = {
+  _id: string;
   email: string;
-  picture: string;
-}
+  nickname: string;
+  profilePicture?: string;
+  interests?: string[];
+  googleId?: string;
+};
+
+export type UserState = {
+  result: User;
+  token: string;
+};
