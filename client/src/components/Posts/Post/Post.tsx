@@ -32,7 +32,7 @@ export default function Post({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useSelector((state: RootState) => state.user);
   const hasLikedPost =
-    user && post.likes.includes(user.result?._id || user._id);
+    user && post.likes.includes(user.result?._id);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

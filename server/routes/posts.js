@@ -9,6 +9,7 @@ import {
   getPostsByUser,
   getLikedPosts,
   getPostsByTag,
+  getPostsByUserInterests,
 } from "../controllers/posts.js";
 import auth from "../middleware/auth.js";
 
@@ -23,5 +24,7 @@ router.get("/user/:id", getPostsByUser);
 router.get("/liked/:userId", getLikedPosts);
 
 router.get("/tag/:tag", getPostsByTag);
+router.get("/interests/:userId", auth, getPostsByUserInterests);
+
 
 export default router;
