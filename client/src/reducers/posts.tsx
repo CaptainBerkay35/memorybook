@@ -33,10 +33,27 @@ export default (state = initialState, action: any): PostsState => {
         ...state,
         filteredByInterests: action.payload,
       };
-
+    case "ADD_TO_INTEREST_POSTS":
+      return {
+        ...state,
+        filteredByInterests: [action.payload, ...state.filteredByInterests],
+      };
+    case "UPDATE_INTEREST_POST":
+      return {
+        ...state,
+        filteredByInterests: state.filteredByInterests.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        ),
+      };
+    case "DELETE_INTEREST_POST":
+      return {
+        ...state,
+        filteredByInterests: state.filteredByInterests.filter(
+          (post) => post._id !== action.payload
+        ),
+      };
     case "FETCH_BY_TAG":
-      return { ...state, filteredByTag: action.payload }; // ✅ eklendi
-
+      return { ...state, filteredByTag: action.payload };
     case "CREATE":
       return {
         ...state,
