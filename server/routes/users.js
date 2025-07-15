@@ -1,5 +1,5 @@
 import express from "express";
-import {signin,signup, googleSignIn,getUserById,updateUserProfile,deleteAccount} from '../controllers/users.js'
+import {signin,signup, googleSignIn,getUserById,updateUserProfile,deleteAccount,updateUserInterests,getUserInterests} from '../controllers/users.js'
 import auth from "../middleware/auth.js";
 
 
@@ -15,6 +15,9 @@ router.get("/:id", getUserById);
 router.patch("/update-profile/:id", updateUserProfile);
 
 router.delete('/:id', auth, deleteAccount);
+
+router.put("/:id/interests", auth, updateUserInterests);
+router.get("/:id/interests", auth, getUserInterests);
 
 
 export default router;

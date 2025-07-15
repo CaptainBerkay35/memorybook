@@ -149,4 +149,49 @@ export const deleteAccount = async (req, res) => {
     res.status(500).json({ message: "Failed to delete account." });
   }
 };
+// İlgi alanlarını güncelle
+export const updateUserInterests = async (req, res) => {
+  const { id } = req.params;
+  const { interests } = req.body;
+
+  try {
+    if (!Array.isArray(interests)) {
+      return res.status(400).json({ message: "Interests must be an array." });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { interests },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Failed to update interests:", error);
+    res.status(500).json({ message: "Something went wrong." });
+  }
+};
+
+// İlgi alanlarını getir
+export const getUserInterests = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id).select("interests");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json(user.interests || []);
+  } catch (error) {
+    console.error("Failed to fetch interests:", error);
+    res.status(500).json({ message: "Something went wrong." });
+  }
+};
+
 
