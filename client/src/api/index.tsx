@@ -66,6 +66,8 @@ export const updateUserInterests = (id: string, interests: string[]) =>
   API.put(`/user/${id}/interests`, { interests });
 export const fetchUserInterests = (id: string) =>
   API.get(`/user/${id}/interests`);
+export const fetchPostsByUserInterests = (userId: string) =>
+  API.get(`/posts/interests/${userId}`);
 
 
 

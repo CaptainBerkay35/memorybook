@@ -5,7 +5,8 @@ type PostsState = {
   userPosts: PostType[];
   likedPosts: PostType[];
   filteredByTag: PostType[];
-  lastPostCreatedAt: number | null; 
+  filteredByInterests: PostType[];
+  lastPostCreatedAt: number | null;
 };
 
 const initialState: PostsState = {
@@ -13,7 +14,8 @@ const initialState: PostsState = {
   userPosts: [],
   likedPosts: [],
   filteredByTag: [],
-   lastPostCreatedAt: null,
+  filteredByInterests: [],
+  lastPostCreatedAt: null,
 };
 
 export default (state = initialState, action: any): PostsState => {
@@ -26,6 +28,11 @@ export default (state = initialState, action: any): PostsState => {
 
     case "FETCH_LIKED_POSTS":
       return { ...state, likedPosts: action.payload };
+    case "FETCH_INTEREST_POSTS":
+      return {
+        ...state,
+        filteredByInterests: action.payload,
+      };
 
     case "FETCH_BY_TAG":
       return { ...state, filteredByTag: action.payload }; // ✅ eklendi
@@ -35,7 +42,7 @@ export default (state = initialState, action: any): PostsState => {
         ...state,
         all: [...state.all, action.payload],
         userPosts: [...state.userPosts, action.payload],
-        lastPostCreatedAt: Date.now(),  
+        lastPostCreatedAt: Date.now(),
       };
     case "UPDATE":
     case "LIKE":
@@ -52,7 +59,7 @@ export default (state = initialState, action: any): PostsState => {
         ),
         filteredByTag: state.filteredByTag.map((post) =>
           post._id === action.payload._id ? action.payload : post
-        ), 
+        ),
       };
 
     case "DELETE":

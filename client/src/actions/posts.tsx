@@ -1,5 +1,5 @@
 import * as api from "../api";
-import type { Dispatch,AnyAction  } from "redux";
+import type { Dispatch } from "redux";
 import type { NewPostType, EditablePostFields } from "../types/Post";
 import type { ThunkDispatch } from "redux-thunk";
 import type { RootState } from "../store/store";
@@ -13,7 +13,6 @@ export const getPosts = () => async (dispatch: Dispatch) => {
     console.error(error);
   }
 };
-
 export const createPost = (post: NewPostType) => async (dispatch: Dispatch) => {
   try {
     const { data } = await api.createPost(post);
@@ -48,7 +47,7 @@ export const likePost =
       const { data } = await api.likePost(id);
       dispatch({ type: "UPDATE", payload: data });
 
-      const userId = getState().user?.result?._id || getState().user?._id;
+      const userId = getState().user?.result?._id;
       if (userId) {
         dispatch(getLikedPosts(userId));
       }
@@ -81,3 +80,12 @@ export const getPostsByTag = (tag: string) => async (dispatch: Dispatch) => {
     console.error("Error fetching posts by tag:", error);
   }
 };
+export const getPostsByUserInterests = (userId: string) => async (dispatch: Dispatch) => {
+  try {
+    const { data } = await api.fetchPostsByUserInterests(userId);
+    dispatch({ type: "FETCH_INTEREST_POSTS", payload: data });
+  } catch (error) {
+    console.error("Interest-based posts fetch error:", error);
+  }
+};
+
