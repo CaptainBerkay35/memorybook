@@ -31,8 +31,7 @@ export default function ProfileHeader({
   };
 
   return (
-    <div className="flex">
-      
+    <div className="flex flex-col md:flex-row gap-6">
       <div className="flex flex-col items-center text-center ">
         <button
           onClick={() => setShowEditModal(true)}
@@ -78,8 +77,9 @@ export default function ProfileHeader({
           )}
         </div>
       </div>
-      <div>
-        <ProfileInterest></ProfileInterest>
+       <div className="flex-1">
+        {/* 🎯 Burada userId props'unu iletiyoruz */}
+        <ProfileInterest userId={userId} />
       </div>
     </div>
   );
