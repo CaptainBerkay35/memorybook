@@ -68,27 +68,27 @@ export default function Header() {
                 className="flex items-center gap-2 cursor-pointer select-none"
                 onClick={() => setDropdownOpen((prev) => !prev)}
               >
-                {user.result?.profilePicture || user.profilePicture ? (
+                {user.result?.profilePicture  ? (
                   <img
-                    src={user.result?.profilePicture || user.profilePicture}
-                    alt={user.result?.name || user.name || "User"}
+                    src={user.result?.profilePicture }
+                    alt={user.result?.nickname || "User"}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold uppercase">
-                    {(user.result?.nickname || user.nickname)
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-b from-blue-400 via-blue-500 to-blue-700 flex items-center justify-center text-white font-bold uppercase">
+                    {(user.result?.nickname )
                       ?.charAt(0)
                       .toUpperCase() || "U"}
                   </div>
                 )}
                 <h6 className="font-semibold text-sm md:text-base">
-                  {user.result?.nickname || user.nickname || "User"}
+                  {user.result?.nickname  || "User"}
                 </h6>
               </div>
               {dropdownOpen && (
                 <div className="absolute left-0 mt-8 w-42 bg-white shadow-md rounded-md overflow-hidden z-50">
                   <Link
-                    to={`/profile/${user.result?._id || user._id}`}
+                    to={`/profile/${user.result?._id }`}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-red-100 font-medium"
                   >
                     Profile
