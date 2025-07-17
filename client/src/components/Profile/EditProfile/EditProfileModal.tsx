@@ -1,30 +1,50 @@
-import { useState } from "react";
-import { EditIcon } from "../../../assets/icons";
-import DeleteAccountButton from "./DeleteAccountButton.tsx";
-import ImageUpload from "../../ImageInput/ImageUpload.tsx";
+import { useState, useEffect } from "react";
+import ProfileTabContent from "./EditProfileTabContent/ProfileTabContent.tsx";
+import InterestsTabContent from "./EditProfileTabContent/InterestTabContent.tsx";
+import AccountTabContent from "./EditProfileTabContent/AccountTabContent.tsx";
 
 type Props = {
   currentNickname: string;
   currentProfilePicture?: string;
-  onSave: (updates: { nickname?: string; profilePicture?: string }) => void;
+  currentInterests?: string[];
+  onSave: (updates: {
+    nickname?: string;
+    profilePicture?: string;
+    interests?: string[];
+  }) => void;
   onClose: () => void;
+  userId: string;
 };
+
+const tabs = ["Profile", "Interests", "Account"] as const;
+type Tab = (typeof tabs)[number];
 
 export default function EditProfileModal({
   currentNickname,
   currentProfilePicture,
   onSave,
   onClose,
+  userId,
 }: Props) {
   const [nickname, setNickname] = useState(currentNickname);
   const [profilePicture, setProfilePicture] = useState<string | undefined>(
     currentProfilePicture
   );
   const [openEdit, setOpenEdit] = useState(false);
+  const [activeTab, setActiveTab] = useState<Tab>("Profile");
+  const [isDirty, setIsDirty] = useState(false);
 
-  function openEditFunction() {
-    setOpenEdit(true);
-  }
+  useEffect(() => {
+    const nicknameChanged = nickname !== currentNickname;
+    const profilePicChanged = profilePicture !== currentProfilePicture;
+
+    setIsDirty(nicknameChanged || profilePicChanged);
+  }, [nickname, profilePicture]);
+
+  const handleSave = () => {
+    onSave({ nickname, profilePicture });
+    onClose();
+  };
 
   return (
     <div
@@ -33,48 +53,55 @@ export default function EditProfileModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-lg p-6 w-full max-w-sm"
+        className="bg-white rounded-lg p-4 w-full max-w-md h-[320px] flex flex-col"
       >
         <h2 className="text-lg font-semibold mb-4">Edit Profile</h2>
 
-        <ImageUpload
-          value={profilePicture || ""}
-          onChange={(base64) => setProfilePicture(base64)}
-        />
-
-        <div className="flex gap-2 items-center justify-center mb-2">
-          <p>{nickname}</p>
-          <button onClick={openEditFunction}>
-            <EditIcon />
-          </button>
+        {/* Tabs */}
+        <div className="flex mb-2 border-b items-center justify-center">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 text-sm font-medium ${
+                activeTab === tab
+                  ? "border-b-2 border-blue-500 text-blue-500"
+                  : "text-gray-500"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        {openEdit && (
-          <input
-            type="text"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            className="w-full border px-3 py-2 rounded mb-4"
-            placeholder="Nickname"
-            autoFocus
-          />
+        <div className="flex-1 overflow-y-auto">
+          {activeTab === "Profile" && (
+            <ProfileTabContent
+              nickname={nickname}
+              profilePicture={profilePicture}
+              openEdit={openEdit}
+              onNicknameChange={setNickname}
+              onProfilePictureChange={setProfilePicture}
+              toggleEdit={() => setOpenEdit(!openEdit)}
+            />
+          )}
+          {activeTab === "Interests" && <InterestsTabContent userId={userId} />}
+          {activeTab === "Account" && <AccountTabContent onClose={onClose} />}
+        </div>
+
+        {isDirty && (activeTab === "Profile" || activeTab === "Interests") && (
+          <div className="flex justify-end gap-2 mt-6">
+            <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Save
+            </button>
+          </div>
         )}
-
-        <div className="my-4 border-t pt-4">
-          <DeleteAccountButton />
-        </div>
-
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
-            Cancel
-          </button>
-          <button
-            onClick={() => onSave({ nickname, profilePicture })}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Save
-          </button>
-        </div>
       </div>
     </div>
   );

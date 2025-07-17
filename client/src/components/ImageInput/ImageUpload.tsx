@@ -28,9 +28,8 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
   };
 
  return (
-  <div className="mb-4">
-    <label className="text-xs text-gray-800 block mb-1">Upload Image</label>
-
+  <div className="mb-2">
+    <label className="text-md font-semibold mb-2">Upload Profile Photo</label>
     <div className="flex items-center gap-4">
       <label
         htmlFor="file-upload"

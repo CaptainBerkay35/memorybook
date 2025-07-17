@@ -71,6 +71,7 @@ export default function ProfileHeader({
                   currentProfilePicture={profilePicture}
                   onSave={handleProfileSave}
                   onClose={() => setShowEditModal(false)}
+                  userId={userId}
                 />
               )}
             </>

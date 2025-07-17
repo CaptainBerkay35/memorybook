@@ -14,6 +14,7 @@ export default {
           "50%": {
             backgroundPosition: "100% 50%",
           },
+          
         },
       },
       backgroundSize: {
