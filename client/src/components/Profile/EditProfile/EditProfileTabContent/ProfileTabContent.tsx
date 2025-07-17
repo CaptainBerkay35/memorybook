@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import ImageUpload from "../../../ImageInput/ImageUpload";
 import { EditIcon } from "../../../../assets/icons";
+import ToastSuccess from "../../../../components/Toast/ToastSuccess";
 
 type Props = {
   nickname: string;
@@ -8,6 +10,8 @@ type Props = {
   onNicknameChange: (value: string) => void;
   onProfilePictureChange: (base64: string) => void;
   toggleEdit: () => void;
+  successMessage: string;
+  onToastClose: () => void;
 };
 
 export default function ProfileTabContent({
@@ -17,9 +21,12 @@ export default function ProfileTabContent({
   onNicknameChange,
   onProfilePictureChange,
   toggleEdit,
+  successMessage,
+  onToastClose,
 }: Props) {
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       <div className="flex flex-col items-center">
         <ImageUpload
           value={profilePicture || ""}
@@ -48,6 +55,14 @@ export default function ProfileTabContent({
           className="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           placeholder="Enter new nickname"
           autoFocus
+        />
+      )}
+
+      {successMessage && (
+        <ToastSuccess
+          message={successMessage}
+          duration={3000}
+          onClose={onToastClose}
         />
       )}
     </div>

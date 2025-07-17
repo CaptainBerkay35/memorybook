@@ -12,6 +12,7 @@ export const updateUserInterests = (id: string, interests: string[]) => async (d
 
     // Redux state'i güncelle
     dispatch(setUser(localUser));
+    
   } catch (error) {
     console.error("Update interests error:", error);
   }

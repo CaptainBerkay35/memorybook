@@ -16,8 +16,9 @@ router.patch("/update-profile/:id", updateUserProfile);
 
 router.delete('/:id', auth, deleteAccount);
 
-router.put("/:id/interests", auth, updateUserInterests);
+//router.put("/:id/interests", auth, updateUserInterests);
 router.get("/:id/interests", auth, getUserInterests);
+router.patch('/:id/interests', auth, updateUserInterests);
 
 
 export default router;
