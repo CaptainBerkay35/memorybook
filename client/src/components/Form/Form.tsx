@@ -6,6 +6,7 @@ import type { NewPostType } from "../../types/Post.tsx";
 import { CloseIcon } from "../../assets/icons.tsx";
 import TagsMultiSelect from "./TagMultiSelect.tsx";
 import ImageUpload from "../ImageInput/ImageUpload.tsx";
+import ToastSuccess from "../Toast/ToastSuccess.tsx";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -58,8 +59,6 @@ export default function Form({ isOpen, onClose }: Props) {
     });
 
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
-    setTimeout(() => onClose(), 4000);
   };
 
   if (!isOpen) return null;
@@ -140,9 +139,14 @@ export default function Form({ isOpen, onClose }: Props) {
             Submit
           </button>
           {showSuccess && (
-            <div className="mt-4 text-green-600 font-medium text-center animate-fade-in">
-              Post created successfully!
-            </div>
+            <ToastSuccess
+              message="Post created successfully!"
+              duration={3000}
+              onClose={() => {
+                setShowSuccess(false);
+                onClose();
+              }}
+            />
           )}
         </form>
       </div>

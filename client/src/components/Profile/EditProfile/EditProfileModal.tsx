@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import ProfileTabContent from "./EditProfileTabContent/ProfileTabContent.tsx";
 import InterestsTabContent from "./EditProfileTabContent/InterestTabContent.tsx";
 import AccountTabContent from "./EditProfileTabContent/AccountTabContent.tsx";
@@ -16,9 +16,6 @@ type Props = {
   userId: string;
 };
 
-const tabs = ["Profile", "Interests", "Account"] as const;
-type Tab = (typeof tabs)[number];
-
 export default function EditProfileModal({
   currentNickname,
   currentProfilePicture,
@@ -31,19 +28,28 @@ export default function EditProfileModal({
     currentProfilePicture
   );
   const [openEdit, setOpenEdit] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>("Profile");
+  const [activeTab, setActiveTab] = useState<
+    "Profile" | "Interests" | "Account"
+  >("Profile");
   const [isDirty, setIsDirty] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
+  // isDirty state güncellemesi
   useEffect(() => {
-    const nicknameChanged = nickname !== currentNickname;
-    const profilePicChanged = profilePicture !== currentProfilePicture;
-
-    setIsDirty(nicknameChanged || profilePicChanged);
-  }, [nickname, profilePicture]);
+    setIsDirty(
+      nickname !== currentNickname || profilePicture !== currentProfilePicture
+    );
+  }, [nickname, profilePicture, currentNickname, currentProfilePicture]);
 
   const handleSave = () => {
     onSave({ nickname, profilePicture });
-    onClose();
+
+    setSuccessMessage("Profile updated successfully!");
+
+    setTimeout(() => {
+      setSuccessMessage("");
+      onClose();
+    }, 3000);
   };
 
   return (
@@ -53,16 +59,16 @@ export default function EditProfileModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-lg p-4 w-full max-w-md h-[320px] flex flex-col"
+        className="bg-white rounded-lg p-4 w-full max-w-md flex flex-col"
       >
         <h2 className="text-lg font-semibold mb-4">Edit Profile</h2>
 
         {/* Tabs */}
         <div className="flex mb-2 border-b items-center justify-center">
-          {tabs.map((tab) => (
+          {["Profile", "Interests", "Account"].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => setActiveTab(tab as any)}
               className={`px-4 py-2 text-sm font-medium ${
                 activeTab === tab
                   ? "border-b-2 border-blue-500 text-blue-500"
@@ -83,9 +89,13 @@ export default function EditProfileModal({
               onNicknameChange={setNickname}
               onProfilePictureChange={setProfilePicture}
               toggleEdit={() => setOpenEdit(!openEdit)}
+              successMessage={successMessage}
+              onToastClose={() => setSuccessMessage("")}
             />
           )}
-          {activeTab === "Interests" && <InterestsTabContent userId={userId} />}
+          {activeTab === "Interests" && (
+            <InterestsTabContent userId={userId} onClose={onClose} />
+          )}
           {activeTab === "Account" && <AccountTabContent onClose={onClose} />}
         </div>
 

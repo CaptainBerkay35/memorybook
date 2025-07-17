@@ -63,7 +63,7 @@ export const updateUserProfile = (id: string, payload: { nickname?: string, prof
 export const deleteAccount = (id: string) =>
   API.delete(`/user/${id}`);
 export const updateUserInterests = (id: string, interests: string[]) =>
-  API.put(`/user/${id}/interests`, { interests });
+  API.patch(`/user/${id}/interests`, { interests });
 export const fetchUserInterests = (id: string) =>
   API.get(`/user/${id}/interests`);
 export const fetchPostsByUserInterests = (userId: string) =>

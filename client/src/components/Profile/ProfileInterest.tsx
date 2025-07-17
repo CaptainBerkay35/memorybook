@@ -6,11 +6,9 @@ import { tagIconMap, defaultTagIcon } from "../../constants/tagIconMap.tsx";
 
 type Props = {
   userId: string;
-  paddingClass?: string;
-  font?:string; 
 };
 
-export default function ProfileInterest({ userId, paddingClass = "p-4",font = "text-lg" }: Props) {
+export default function ProfileInterest({ userId, }: Props) {
   const dispatch: AppDispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile.profile);
 
@@ -23,8 +21,8 @@ export default function ProfileInterest({ userId, paddingClass = "p-4",font = "t
   const interests = userProfile?.interests || [];
 
   return (
-    <div className={`${paddingClass}`}>
-      <h2 className={`${font} font-semibold mb-2`}>Interests</h2>
+    <div className="p-4">
+      <h2 className= "font-lg font-semibold mb-2">Interests</h2>
       <div className="flex flex-wrap gap-2">
         {interests.length > 0 ? (
           interests.map((tag: string) => (
