@@ -5,8 +5,7 @@ import { getPostsByTag } from "../actions/posts";
 import type { AppDispatch, RootState } from "../store/store";
 import Post from "../components/Posts/Post/Post";
 import MainLayout from "../layout/MainLayout";
-import PostModal from "../components/Posts/Post/PostModal.tsx"; 
-
+import PostModal from "../components/Posts/Post/PostModal";
 
 export default function TagPage() {
   const { tag } = useParams();
@@ -19,17 +18,15 @@ export default function TagPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
-
   useEffect(() => {
     if (tag) {
       setIsLoading(true);
       dispatch({ type: "RESET_FILTERED_BY_TAG" });
-
       dispatch(getPostsByTag(tag)).finally(() => setIsLoading(false));
     }
   }, [dispatch, tag, lastPostCreatedAt]);
 
- return (
+  return (
     <MainLayout>
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-4">{tag} tagged Posts</h2>
@@ -49,21 +46,22 @@ export default function TagPage() {
             "
           >
             {posts.map((post) => (
-        <Post
-          key={post._id}
-          post={post}
-          onPostClick={() => setSelectedPostId(post._id)}
-        />
-      ))}
+              <Post
+                key={post._id}
+                post={post}
+                onPostClick={() => setSelectedPostId(post._id)}
+              />
+            ))}
           </div>
         )}
       </div>
 
       {selectedPostId && (
-      <PostModal postId={selectedPostId} onClose={() => setSelectedPostId(null)} />
-    )}
-
-   
+        <PostModal
+          postId={selectedPostId}
+          onClose={() => setSelectedPostId(null)}
+        />
+      )}
     </MainLayout>
   );
 }

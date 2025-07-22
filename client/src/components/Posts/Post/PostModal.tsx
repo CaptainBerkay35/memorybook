@@ -11,11 +11,28 @@ export default function PostModal({
   onClose: () => void;
 }) {
   const post = useSelector((state: RootState) =>
-    state.posts.all.find((p) => p._id === postId)
+  state.posts.filteredByTag.find((p) => p._id === postId) ||
+  state.posts.userPosts.find((p) => p._id === postId) ||
+  state.posts.likedPosts.find((p) => p._id === postId)
+);
+if (!post) {
+  return (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white text-black p-6 rounded-lg shadow-lg"
+      >
+        <p>Post could not be loaded.</p>
+        <button onClick={onClose} className="mt-4 text-blue-500 underline">
+          Close
+        </button>
+      </div>
+    </div>
   );
-
-  if (!post) return null;
-
+}
   return (
     <div
       onClick={onClose}

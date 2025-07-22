@@ -31,8 +31,7 @@ export default function Post({
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useSelector((state: RootState) => state.user);
-  const hasLikedPost =
-    user && post.likes.includes(user.result?._id);
+  const hasLikedPost = user && post.likes.includes(user.result?._id);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -69,7 +68,7 @@ export default function Post({
     <div
       className={`bg-white rounded-lg ${mb} p-4 md:p-6`}
       onClick={() => {
-        if (onPostClick) onPostClick();
+        if (onPostClick && !onClose) onPostClick();
       }}
     >
       {editMode ? (
@@ -94,58 +93,56 @@ export default function Post({
                   className="w-10 h-10 rounded-full object-cover"
                 />
               ) : (
-                <ProfileIconEmpty size={40}/>
+                <ProfileIconEmpty size={40} />
               )}
               <p className="text-sm md:text-base text-gray-500">
                 {post.nickname}
               </p>
             </Link>
-            {user &&
-              (user.result?._id === post.creator ||
-                user._id === post.creator) && (
-                <div className="relative max-h-[24px]">
-                  <button
-                    onClick={() => setShowDropdown(!showDropdown)}
-                    className="focus:outline-none"
+            {user && user.result?._id === post.creator && (
+              <div className="relative max-h-[24px]">
+                <button
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="focus:outline-none"
+                >
+                  <DropDownIcon />
+                </button>
+                {showDropdown && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10"
                   >
-                    <DropDownIcon />
-                  </button>
-                  {showDropdown && (
-                    <div
-                      ref={dropdownRef}
-                      className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10"
-                    >
-                      <ul className="text-sm text-gray-700">
-                        <li
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                          onClick={() => {
-                            setEditMode(true);
+                    <ul className="text-sm text-gray-700">
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                        onClick={() => {
+                          setEditMode(true);
+                          setShowDropdown(false);
+                        }}
+                      >
+                        <EditIcon />
+                        Edit
+                      </li>
+                      <li
+                        className="px-4 py-2 cursor-pointer flex items-center gap-2 bg-red-300 hover:bg-red-200"
+                        onClick={() => {
+                          const confirmDelete = window.confirm(
+                            "Are you sure you want to delete this post?"
+                          );
+                          if (confirmDelete) {
+                            dispatch(deletePost(post._id));
                             setShowDropdown(false);
-                          }}
-                        >
-                          <EditIcon />
-                          Edit
-                        </li>
-                        <li
-                          className="px-4 py-2 cursor-pointer flex items-center gap-2 bg-red-300 hover:bg-red-200"
-                          onClick={() => {
-                            const confirmDelete = window.confirm(
-                              "Are you sure you want to delete this post?"
-                            );
-                            if (confirmDelete) {
-                              dispatch(deletePost(post._id));
-                              setShowDropdown(false);
-                            }
-                          }}
-                        >
-                          <DeleteIcon />
-                          Delete
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
+                          }
+                        }}
+                      >
+                        <DeleteIcon />
+                        Delete
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Image Section */}
@@ -183,7 +180,7 @@ export default function Post({
                 className="bg-white rounded-full p-1 md:p-2 shadow-md hover:bg-gray-100 transition-colors flex items-center gap-1"
               >
                 <LikeIcon
-                  filled={hasLikedPost}
+                  filled={!!hasLikedPost}
                   onClick={() => dispatch(likePost(post._id))}
                 />
                 <p className="text-sm md:text-base text-gray-600">
