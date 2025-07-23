@@ -27,7 +27,6 @@ export default function ProfileHeader({
     profilePicture?: string;
   }) => {
     dispatch(updateUserProfile(userId, updates));
-    //setShowEditModal(false);
   };
 
   return (

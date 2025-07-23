@@ -110,7 +110,7 @@ export const updateUserProfile = async (req, res) => {
   try {
     const updateFields = {};
     if (nickname) updateFields.nickname = nickname;
-    if (profilePicture) updateFields.profilePicture = profilePicture;
+     if (typeof profilePicture !== "undefined") updateFields.profilePicture = profilePicture;
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
