@@ -32,6 +32,7 @@ export const updateUserProfile = (id: string, updates: { nickname?: string; prof
     }
 
     dispatch(getPostsByUser(id)); 
+    dispatch(getUserProfile(id));
   } catch (error) {
     console.error("Profile update error:", error);
   }

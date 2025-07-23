@@ -42,15 +42,22 @@ export default function EditProfileModal({
   }, [nickname, profilePicture, currentNickname, currentProfilePicture]);
 
   const handleSave = () => {
-    onSave({ nickname, profilePicture });
-
-    setSuccessMessage("Profile updated successfully!");
-
-    setTimeout(() => {
-      setSuccessMessage("");
-      onClose();
-    }, 3000);
+  const updates: { nickname?: string; profilePicture?: string } = {
+    nickname,
   };
+
+  // Eğer profil resmi null/boş string ise açıkça gönder
+  updates.profilePicture = profilePicture || "";
+
+  onSave(updates);
+
+  setSuccessMessage("Profile updated successfully!");
+
+  setTimeout(() => {
+    setSuccessMessage("");
+    onClose();
+  }, 3000);
+};
 
   return (
     <div

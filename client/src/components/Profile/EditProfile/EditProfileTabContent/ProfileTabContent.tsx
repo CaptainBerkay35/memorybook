@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
 import ImageUpload from "../../../ImageInput/ImageUpload";
-import { EditIcon } from "../../../../assets/icons";
+import { EditIcon, DeletePhoto } from "../../../../assets/icons";
 import ToastSuccess from "../../../../components/Toast/ToastSuccess";
 
 type Props = {
@@ -24,14 +23,27 @@ export default function ProfileTabContent({
   successMessage,
   onToastClose,
 }: Props) {
+  const handleDeletePhoto = () => {
+    onProfilePictureChange(""); // resmi temizle
+  };
 
   return (
     <div className="space-y-6 relative">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center relative">
         <ImageUpload
           value={profilePicture || ""}
           onChange={onProfilePictureChange}
         />
+
+        {profilePicture && (
+          <button
+            onClick={handleDeletePhoto}
+            className="absolute top-1 right-1 bg-red-500 p-1 rounded-full hover:bg-red-600 transition"
+            title="Delete photo"
+          >
+            <DeletePhoto size={20} />
+          </button>
+        )}
       </div>
 
       <div className="flex items-center justify-between border p-3 rounded-lg bg-gray-50">
