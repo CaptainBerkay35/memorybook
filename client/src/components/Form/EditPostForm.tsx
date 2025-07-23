@@ -1,19 +1,42 @@
+import { useEffect, useRef, useState } from "react";
+import { CloseIcon } from "../../assets/icons";
+import TagsMultiSelect from "../Form/TagMultiSelect";
+import ImageUpload from "../ImageInput/ImageUpload";
+import ToastSuccess from "../Toast/ToastSuccess"; // <- toast import et
 import type { EditablePostFields } from "../../types/Post";
-import React from "react";
 
-type EditPostFormProps = {
+type Props = {
+  isOpen: boolean;
+  onCancel: () => void;
+  onSave: () => void;
   formData: EditablePostFields;
   setFormData: React.Dispatch<React.SetStateAction<EditablePostFields>>;
-  onSave: () => void;
-  onCancel: () => void;
 };
 
 export default function EditPostForm({
+  isOpen,
+  onCancel,
+  onSave,
   formData,
   setFormData,
-  onSave,
-  onCancel,
-}: EditPostFormProps) {
+}: Props) {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const [showToast, setShowToast] = useState(false); // toast kontrolü
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onCancel();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onCancel]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -21,88 +44,118 @@ export default function EditPostForm({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setFormData({ ...formData, selectedFile: reader.result as string });
-      };
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave();          // veriyi kaydet
+    setShowToast(true); // toast göster
   };
 
+  const handleToastClose = () => {
+    setShowToast(false); // toast gizle
+    onCancel();          // modalı kapat
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <div className="p-6 bg-white rounded-xl shadow-md space-y-3">
-      <label className="block">
-        <span className="block text-sm font-medium text-gray-700 mb-1">
-          Edit Title
-        </span>
+    <>
+      {showToast && (
+        <ToastSuccess
+          message="Post updated successfully!"
+          duration={5000}
+          onClose={handleToastClose}
+        />
+      )}
 
-        <input
-          name="title"
-          value={formData.title || ""}
-          onChange={handleChange}
-          placeholder="Title"
-          className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
-        />
-      </label>
-      <label className="block">
-        <span className="block text-sm font-medium text-gray-700 mb-1">
-          Edit Message
-        </span>
-
-        <textarea
-          name="message"
-          value={formData.message || ""}
-          onChange={handleChange}
-          placeholder="Message"
-          rows={5}
-          className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200 resize-none"
-        />
-      </label>
-      <label className="block">
-        <span className="block text-sm font-medium text-gray-700 mb-1">
-          Edit Tags
-        </span>
-
-        <input
-          name="tags"
-          value={formData.tags || ""}
-          onChange={handleChange}
-          placeholder="Tags (comma separated)"
-          className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
-        />
-      </label>
-      <label className="block">
-        <span className="block text-sm font-medium text-gray-700 mb-1">
-          Upload Image
-        </span>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4
-            file:rounded-xl file:border-0
-            file:text-sm file:font-semibold
-            file:bg-indigo-50 file:text-indigo-700
-            hover:file:bg-indigo-100 transition duration-200"
-        />
-      </label>
-      <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
-        <button
-          onClick={onSave}
-          className="bg-green-500 text-white px-6 py-2 rounded-xl shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-200"
+      <div className="fixed inset-0 z-[9999] bg-black bg-opacity-40 flex items-center justify-center p-4">
+        <div
+          ref={modalRef}
+          className="bg-white w-full max-w-md rounded-md shadow-lg relative"
         >
-          Save
-        </button>
-        <button
-          onClick={onCancel}
-          className="text-gray-600 underline hover:text-gray-800 focus:outline-none transition duration-200"
-        >
-          Cancel
-        </button>
+          <button
+            onClick={onCancel}
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold z-50"
+          >
+            <CloseIcon />
+          </button>
+
+          <div className="flex items-center justify-center bg-black text-white text-lg text-center p-2 rounded-t-md">
+            <h2 className="text-lg font-bold text-center">Edit Post</h2>
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-4">
+            {/* Title */}
+            <div className="mb-2">
+              <label className="text-xs text-gray-800">Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title || ""}
+                onChange={handleChange}
+                className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            {/* Message */}
+            <div className="mb-2">
+              <label className="text-xs text-gray-800">Message</label>
+              <input
+                type="text"
+                name="message"
+                value={formData.message || ""}
+                onChange={handleChange}
+                className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            {/* Image Upload */}
+            <div className="mb-4">
+              <ImageUpload
+                value={formData.selectedFile || ""}
+                onChange={(base64) =>
+                  setFormData({ ...formData, selectedFile: base64 })
+                }
+              />
+            </div>
+
+            {/* Tags */}
+            <div className="mb-2">
+              <div className="flex gap-2 items-center mb-1">
+                <label className="text-xs text-gray-800">Tags</label>
+                <span
+                  className="text-xs text-gray-600 underline cursor-help"
+                  title="You must select at least 1 tag and at most 3 tags."
+                >
+                  Tags selection rules
+                </span>
+              </div>
+              <TagsMultiSelect
+                selectedTags={formData.tags || []}
+                onChange={(tags) => setFormData({ ...formData, tags })}
+              />
+            </div>
+
+            {/* Save Button */}
+            <button
+              type="submit"
+              disabled={
+                !formData.tags ||
+                formData.tags.length < 1 ||
+                formData.tags.length > 3
+              }
+              className={`p-2 border border-gray-400 rounded-md w-full ${
+                !formData.tags ||
+                formData.tags.length < 1 ||
+                formData.tags.length > 3
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+            >
+              Save Changes
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
