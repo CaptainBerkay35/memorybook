@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import ImageUpload from "../../../ImageInput/ImageUpload";
 import { EditIcon, DeletePhoto } from "../../../../assets/icons";
 import ToastSuccess from "../../../../components/Toast/ToastSuccess";
@@ -23,8 +24,19 @@ export default function ProfileTabContent({
   successMessage,
   onToastClose,
 }: Props) {
+  const [nicknameError, setNicknameError] = useState("");
+
   const handleDeletePhoto = () => {
-    onProfilePictureChange(""); // resmi temizle
+    onProfilePictureChange("");
+  };
+
+  const handleNicknameChange = (value: string) => {
+    if (value.length > 20) {
+      setNicknameError("Nickname en fazla 20 karakter olabilir.");
+    } else {
+      setNicknameError("");
+    }
+    onNicknameChange(value);
   };
 
   return (
@@ -39,7 +51,7 @@ export default function ProfileTabContent({
           <button
             onClick={handleDeletePhoto}
             className="absolute top-1 right-1 bg-red-500 p-1 rounded-full hover:bg-red-600 transition"
-            title="Delete photo"
+            title="Fotoğrafı Sil"
           >
             <DeletePhoto size={20} />
           </button>
@@ -60,14 +72,18 @@ export default function ProfileTabContent({
       </div>
 
       {openEdit && (
-        <input
-          type="text"
-          value={nickname}
-          onChange={(e) => onNicknameChange(e.target.value)}
-          className="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="Enter new nickname"
-          autoFocus
-        />
+        <div>
+          <input
+            type="text"
+            value={nickname}
+            onChange={(e) => handleNicknameChange(e.target.value)}
+            maxLength={20}
+            className={"w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 "}
+            placeholder="Enter new nickname"
+            autoFocus
+          />
+       
+        </div>
       )}
 
       {successMessage && (

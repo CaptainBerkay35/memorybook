@@ -72,7 +72,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-200 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-300 to-blue-200 px-4">
       <div className="bg-white p-8 shadow-md w-full max-w-md rounded-xl">
         <div className="flex items-center gap-3 mb-6">
           <MemoryBookIcon />
@@ -87,8 +87,10 @@ export default function Auth() {
               label="Kullanıcı Adı"
               name="nickname"
               type="text"
-              placeholder="Bir kullanıcı adı girin"
+              placeholder="Enter Nickname max 20 characters"
               required
+              minLength={3}
+              maxLength={20}
               onChange={handleChange}
             />
           )}
@@ -98,6 +100,8 @@ export default function Auth() {
             type="email"
             placeholder="example@mail.com"
             required
+            minLength={3}
+            maxLength={30}
             onChange={handleChange}
           />
 
@@ -107,7 +111,10 @@ export default function Auth() {
             type="password"
             placeholder="••••••••"
             required
+            minLength={3}
+            maxLength={20}
             onChange={handleChange}
+            showPasswordToggle
           />
 
           {isSignUp && (
@@ -115,9 +122,12 @@ export default function Auth() {
               label="Şifre (Tekrar)"
               name="confirmPassword"
               type="password"
-              placeholder="Şifrenizi tekrar girin"
+              placeholder="Confirm password"
               required
+              minLength={3}
+              maxLength={20}
               onChange={handleChange}
+              showPasswordToggle
             />
           )}
 
