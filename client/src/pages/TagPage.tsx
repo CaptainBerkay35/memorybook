@@ -6,6 +6,7 @@ import type { AppDispatch, RootState } from "../store/store";
 import Post from "../components/Posts/Post/Post";
 import MainLayout from "../layout/MainLayout";
 import PostModal from "../components/Posts/Post/PostModal";
+import LoadingSpinner from "../components/Loading/LoadingSpinner";
 
 export default function TagPage() {
   const { tag } = useParams();
@@ -28,22 +29,33 @@ export default function TagPage() {
 
   return (
     <MainLayout>
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-4">{tag} tagged Posts</h2>
+      <div className="p-4 min-h-screen bg-white">
+        <div className="min-h-[48px] ">
+          {isLoading ? null : (
+            <h2 className="text-2xl md:text-3xl font-bold text-neutral-700">
+              {tag} tagged Posts
+            </h2>
+          )}
+        </div>
 
+        {/* İçerik */}
         {isLoading ? (
-          <p className="text-gray-500">Loading...</p>
+           <div className="flex justify-center items-center h-[60vh]">
+            <LoadingSpinner />
+          </div>
         ) : posts.length === 0 ? (
-          <p className="text-gray-500">No posts found with this tag.</p>
+          <p className="text-gray-500 text-center">
+            No posts found with this tag.
+          </p>
         ) : (
           <div
             className="
-              grid gap-4
-              grid-cols-1
-              sm:grid-cols-2
-              md:grid-cols-3
-              lg:grid-cols-3
-            "
+        grid gap-6
+        grid-cols-1
+        sm:grid-cols-2
+        md:grid-cols-3
+        lg:grid-cols-3
+      "
           >
             {posts.map((post) => (
               <Post

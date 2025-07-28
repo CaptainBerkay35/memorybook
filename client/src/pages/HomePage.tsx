@@ -13,6 +13,7 @@ export default function HomePage() {
   const user = useSelector((state: RootState) => state.user);
   const posts = useSelector((state: RootState) => state.posts.filteredByInterests);
   const [interestsSaved, setInterestsSaved] = useState(false);
+  const isLoading = useSelector((state: RootState) => state.posts.isLoading);
 
   const isLoggedIn = !!user?.result;
   const hasNoInterests = user?.result?.interests?.length === 0;
@@ -41,7 +42,7 @@ export default function HomePage() {
       )}
 
       {(isLoggedIn && (!hasNoInterests || interestsSaved)) || !isLoggedIn ? (
-        <Posts posts={isLoggedIn ? posts : undefined} />
+        <Posts posts={isLoggedIn ? posts : undefined} isLoading={isLoading} />
       ) : null}
     </MainLayout>
   );

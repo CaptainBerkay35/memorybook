@@ -7,6 +7,7 @@ type PostsState = {
   filteredByTag: PostType[];
   filteredByInterests: PostType[];
   lastPostCreatedAt: number | null;
+  isLoading: boolean;
 };
 
 const initialState: PostsState = {
@@ -16,6 +17,7 @@ const initialState: PostsState = {
   filteredByTag: [],
   filteredByInterests: [],
   lastPostCreatedAt: null,
+  isLoading: false,
 };
 
 export default (state = initialState, action: any): PostsState => {
@@ -23,15 +25,24 @@ export default (state = initialState, action: any): PostsState => {
     case "FETCH_ALL":
       return { ...state, all: action.payload };
 
+    case "FETCH_USER_POSTS_START":
+      return { ...state, isLoading: true };
+
     case "FETCH_USER_POSTS":
-      return { ...state, userPosts: action.payload };
+      return { ...state, userPosts: action.payload, isLoading: false };
+
+    case "FETCH_USER_POSTS_ERROR":
+      return { ...state, isLoading: false };
 
     case "FETCH_LIKED_POSTS":
       return { ...state, likedPosts: action.payload };
+    case "FETCH_INTEREST_POSTS_START":
+      return { ...state, isLoading: true };
     case "FETCH_INTEREST_POSTS":
       return {
         ...state,
         filteredByInterests: action.payload,
+        isLoading: false,
       };
     case "ADD_TO_INTEREST_POSTS":
       return {

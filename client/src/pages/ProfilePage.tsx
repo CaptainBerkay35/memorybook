@@ -15,7 +15,8 @@ export default function ProfilePage() {
   const userProfile = useSelector(
     (state: RootState) => state.userProfile.profile
   );
-  const userPosts = useSelector((state: RootState) => state.posts.userPosts);
+const userPosts = useSelector((state: RootState) => state.posts.userPosts);
+const isLoading = useSelector((state: RootState) => state.posts.isLoading);
 
   const userIdToShow = id || loggedInUser?.result?._id;
   const isOwnProfile = id === loggedInUser?.result?._id;
@@ -38,7 +39,7 @@ useEffect(() => {
             isOwnProfile={isOwnProfile}
             userId={userIdToShow}
           />
-          <ProfilePostList posts={userPosts} emptyText="No posts yet." />
+          <ProfilePostList posts={userPosts} emptyText="No posts yet." isLoading={isLoading} />
         </>
       )}
     </MainLayout>

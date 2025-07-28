@@ -1,4 +1,4 @@
-export const MemoryBookIcon = ({ size = 32, color = "#751a1a" }) => (
+export const MemoryBookIcon = ({ size = 32, color = "#1E88E5" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
