@@ -1,17 +1,23 @@
 import { useState } from "react";
 import Post from "../Posts/Post/Post";
 import PostModal from "../Posts/Post/PostModal";
+import LoadingSpinner from "../Loading/LoadingSpinner.tsx";
 import type { PostType } from "../../types/Post";
-
 
 export default function ProfilePostList({
   posts,
   emptyText,
+  isLoading,
 }: {
   posts: PostType[];
   emptyText: string;
+  isLoading?: boolean;
 }) {
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   if (!posts.length) {
     return <div className="text-center text-gray-500">{emptyText}</div>;
@@ -29,10 +35,10 @@ export default function ProfilePostList({
         "
       >
         {posts.map((post) => (
-          <Post 
-            key={post._id} 
-            post={post} 
-            onPostClick={() => setSelectedPostId(post._id)} 
+          <Post
+            key={post._id}
+            post={post}
+            onPostClick={() => setSelectedPostId(post._id)}
           />
         ))}
       </div>

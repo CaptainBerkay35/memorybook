@@ -4,12 +4,14 @@ import Post from "./Post/Post.tsx";
 import { getPosts } from "../../actions/posts";
 import type { PostType } from "../../types/Post.tsx";
 import type { AppDispatch, RootState } from "../../store/store";
+import LoadingSpinner from "../Loading/LoadingSpinner.tsx";
 
 type PostsProps = {
   posts?: PostType[];
+  isLoading?: boolean;
 };
 
-export default function Posts({ posts }: PostsProps) {
+export default function Posts({ posts, isLoading }: PostsProps) {
   const dispatch: AppDispatch = useDispatch();
   const reduxPosts = useSelector((state: RootState) => state.posts.all);
 
@@ -21,17 +23,20 @@ export default function Posts({ posts }: PostsProps) {
     }
   }, [dispatch, posts]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <LoadingSpinner />
+      </div>
+    );
+  }
   return (
     <>
-      {!displayPosts.length ? (
-        <div>No posts yet.</div>
-      ) : (
-        <div>
-          {displayPosts.map((post: PostType) => (
-            <Post key={post._id} post={post} />
-          ))}
-        </div>
-      )}
+      <div>
+        {displayPosts.map((post: PostType) => (
+          <Post key={post._id} post={post} />
+        ))}
+      </div>
     </>
   );
 }

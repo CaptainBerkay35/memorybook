@@ -108,11 +108,12 @@ export const likePost =
 
 export const getPostsByUser = (userId: string) => async (dispatch: Dispatch) => {
   try {
+    dispatch({ type: "FETCH_USER_POSTS_START" });
     const { data } = await api.fetchPostsByUser(userId);
     dispatch({ type: "FETCH_USER_POSTS", payload: data });
-
   } catch (error) {
     console.error("User posts fetch error:", error);
+    dispatch({ type: "FETCH_USER_POSTS_ERROR" });
   }
 };
 export const getLikedPosts = (userId: string) => async (dispatch: Dispatch) => {
@@ -133,7 +134,10 @@ export const getPostsByTag = (tag: string) => async (dispatch: Dispatch) => {
 };
 export const getPostsByUserInterests = (userId: string) => async (dispatch: Dispatch) => {
   try {
+    dispatch({ type: "FETCH_INTEREST_POSTS_START" });
+
     const { data } = await api.fetchPostsByUserInterests(userId);
+
     dispatch({ type: "FETCH_INTEREST_POSTS", payload: data });
   } catch (error) {
     console.error("Interest-based posts fetch error:", error);
