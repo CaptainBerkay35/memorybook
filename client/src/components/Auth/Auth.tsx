@@ -18,6 +18,7 @@ const initialState: AuthFormData = {
   password: "",
   confirmPassword: "",
 };
+
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch: AppDispatch = useDispatch();
@@ -28,9 +29,9 @@ export default function Auth() {
     e.preventDefault();
     try {
       if (isSignUp) {
-        await dispatch(signup(formData, navigate)); 
+        await dispatch(signup(formData, navigate));
       } else {
-        await dispatch(signin(formData, navigate)); 
+        await dispatch(signin(formData, navigate));
       }
     } catch (error) {
       alert("Bir hata oluştu. Lütfen bilgilerinizi kontrol edin.");
@@ -44,53 +45,53 @@ export default function Auth() {
   };
 
   const handleGoogleLogin = async (res: CredentialResponse) => {
-  try {
-    if (!res.credential) {
-      console.log("Google credential yok.");
-      return;
+    try {
+      if (!res.credential) {
+        console.log("Google credential yok.");
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/user/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ credential: res.credential }),
+      });
+
+      if (!response.ok) throw new Error("Google login başarısız.");
+
+      const data = await response.json();
+
+      dispatch(setUser(data));
+      localStorage.setItem("user", JSON.stringify(data));
+      navigate("/");
+    } catch (error) {
+      console.error("Google Login Hatası:", error);
     }
-
-    const response = await fetch("http://localhost:5000/user/google", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ credential: res.credential }),
-    });
-
-    if (!response.ok) throw new Error("Google login başarısız.");
-
-    const data = await response.json(); 
-
-    dispatch(setUser(data));
-    localStorage.setItem("user", JSON.stringify(data));
-    navigate("/");
-  } catch (error) {
-    console.error("Google Login Hatası:", error);
-  }
-};
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-100 px-4">
-      <div className="bg-white p-8 shadow-lg w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-200 px-4">
+      <div className="bg-white p-8 shadow-md w-full max-w-md rounded-xl">
         <div className="flex items-center gap-3 mb-6">
           <MemoryBookIcon />
-          <h1 className="text-2xl font-semibold text-gray-800 font-montserrat">
+          <h1 className="text-2xl font-bold text-blue-600 font-montserrat">
             MemoryBook
           </h1>
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           {isSignUp && (
-  <InputField
-    label="Kullanıcı Adı"
-    name="nickname"
-    type="text"
-    placeholder="Bir kullanıcı adı girin"
-    required
-    onChange={handleChange}
-  />
-)}
+            <InputField
+              label="Kullanıcı Adı"
+              name="nickname"
+              type="text"
+              placeholder="Bir kullanıcı adı girin"
+              required
+              onChange={handleChange}
+            />
+          )}
           <InputField
             label="E-posta"
             name="email"
@@ -122,13 +123,13 @@ export default function Auth() {
 
           <button
             type="submit"
-            className="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-primary-dark transition duration-300"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
           >
             {isSignUp ? "Kayıt Ol" : "Giriş Yap"}
           </button>
         </form>
 
-        <div className="mt-4">
+        <div className="mt-5 flex justify-center">
           <GoogleLogin
             onSuccess={handleGoogleLogin}
             onError={() => {
@@ -137,11 +138,11 @@ export default function Auth() {
           />
         </div>
 
-        <p className="text-center text-sm text-gray-600 mt-4">
+        <p className="text-center text-sm text-gray-700 mt-6">
           {isSignUp ? "Zaten hesabınız var mı?" : "Hesabınız yok mu?"}{" "}
           <button
             onClick={() => setIsSignUp((prev) => !prev)}
-            className="text-primary font-medium hover:underline"
+            className="text-blue-600 font-medium hover:underline"
           >
             {isSignUp ? "Giriş Yap" : "Kayıt Ol"}
           </button>
