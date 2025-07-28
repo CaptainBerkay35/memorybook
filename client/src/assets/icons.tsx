@@ -1,4 +1,4 @@
-export const MemoryBookIcon = ({ size = 32, color = "#1E88E5" }) => (
+export const MemoryBookIcon = ({ size = 32, color = "#1976D2" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -185,5 +185,44 @@ export const DeletePhoto = ({ size = 32 }) => (
       fill="#fff"
       d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm5-7.1l1.9 1.9q.275.275.7.275t.7-.275t.275-.7t-.275-.7l-1.9-1.9l1.9-1.9q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275L12 11.1l-1.9-1.9q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7l1.9 1.9l-1.9 1.9q-.275.275-.275.7t.275.7t.7.275t.7-.275z"
     />
+  </svg>
+);
+export const ShowPasswordIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+    />
+  </svg>
+);
+
+export const HidePasswordIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={2}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-9a9.957 9.957 0 012.088-5.653M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+    />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
   </svg>
 );
