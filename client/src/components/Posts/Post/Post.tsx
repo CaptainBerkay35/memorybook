@@ -62,6 +62,21 @@ export default function Post({
   const handleSave = () => {
     dispatch(updatePost(post._id, formData));
   };
+  function getTimeAgo(dateString: string) {
+    const now = new Date();
+    const createdAt = new Date(dateString);
+    const diffMs = now.getTime() - createdAt.getTime();
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMinutes < 1) return "just now";
+    if (diffMinutes < 60)
+      return `${diffMinutes}m${diffMinutes !== 1 ? "" : ""} ago`;
+    if (diffHours < 24)
+      return `${diffHours}h${diffHours !== 1 ? "" : ""} ago`;
+    return `${diffDays}d${diffDays !== 1 ? "" : ""} ago`;
+  }
 
   return (
     <div
@@ -191,6 +206,11 @@ export default function Post({
               {post.message}
             </p>
           </div>
+          {post.createdAt && (
+            <div className="text-xs text-gray-400 items-end justify-end">
+              {getTimeAgo(post.createdAt)}
+            </div>
+          )}
         </div>
       </>
       {editMode && (
