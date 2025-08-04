@@ -13,6 +13,14 @@ export const getPosts = () => async (dispatch: Dispatch) => {
     console.error(error);
   }
 };
+export const getRecentPosts = () => async (dispatch: Dispatch) => {
+  try {
+    const { data } = await api.fetchRecentPosts();
+    dispatch({ type: "FETCH_RECENT", payload: data });
+  } catch (error) {
+    console.error(error);
+  }
+}
 export const createPost = (post: NewPostType) =>
   async (dispatch: ThunkDispatch<RootState, void, any>, getState: () => RootState) => {
     try {

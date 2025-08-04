@@ -6,6 +6,7 @@ type PostsState = {
   likedPosts: PostType[];
   filteredByTag: PostType[];
   filteredByInterests: PostType[];
+  recentPosts: PostType[];
   lastPostCreatedAt: number | null;
   isLoading: boolean;
 };
@@ -16,6 +17,7 @@ const initialState: PostsState = {
   likedPosts: [],
   filteredByTag: [],
   filteredByInterests: [],
+  recentPosts: [],
   lastPostCreatedAt: null,
   isLoading: false,
 };
@@ -24,6 +26,11 @@ export default (state = initialState, action: any): PostsState => {
   switch (action.type) {
     case "FETCH_ALL":
       return { ...state, all: action.payload };
+    case "FETCH_RECENT":
+      return {
+        ...state,
+        recentPosts: action.payload,
+      };
 
     case "FETCH_USER_POSTS_START":
       return { ...state, isLoading: true };

@@ -60,7 +60,7 @@ export default function Slider() {
             </div>
             <div className="absolute inset-0  flex flex-col justify-end items-center mb-6">
               <button
-                className="py-2 px-6 text-white text-lg bg-primary rounded"
+                className="py-2 px-6 text-white text-lg bg-blue-600 rounded hover:bg-blue-700 transition duration-300"
                 onClick={navigateSignUp}
               >
                 Create Memory
