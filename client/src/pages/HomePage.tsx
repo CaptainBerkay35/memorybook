@@ -8,6 +8,8 @@ import type { RootState, AppDispatch } from "../store/store.tsx";
 import { getPostsByUserInterests, getRecentPosts } from "../actions/posts";
 import { updateUserInterests } from "../actions/interest";
 import SeeMorePrompt from "../components/SeeMore/SeeMore.tsx";
+import LoadingSpinner from "../components/Loading/LoadingSpinner.tsx";
+
 
 export default function HomePage() {
   const dispatch: AppDispatch = useDispatch();
@@ -43,20 +45,26 @@ export default function HomePage() {
   const shouldShowPosts =
     (isLoggedIn && (!hasNoInterests || interestsSaved)) || !isLoggedIn;
 
-  return (
-    <MainLayout>
-      {!isLoggedIn && <Slider />}
+ return (
+  <MainLayout>
+    {!isLoggedIn && <Slider />}
 
-      {isLoggedIn && hasNoInterests && !interestsSaved && (
-        <InterestSelector onSubmit={handleInterestSubmit} />
-      )}
+    {isLoggedIn && hasNoInterests && !interestsSaved && (
+      <InterestSelector onSubmit={handleInterestSubmit} />
+    )}
 
-      {shouldShowPosts && (
+    {isLoading ? (
+      <div className="flex justify-center items-center h-[60vh]">
+        <LoadingSpinner />
+      </div>
+    ) : (
+      shouldShowPosts && (
         <>
           <Posts posts={postsToShow} isLoading={isLoading} />
           {!isLoggedIn && <SeeMorePrompt />}
         </>
-      )}
-    </MainLayout>
-  );
+      )
+    )}
+  </MainLayout>
+);
 }

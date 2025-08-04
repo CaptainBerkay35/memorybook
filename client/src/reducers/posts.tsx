@@ -26,11 +26,12 @@ export default (state = initialState, action: any): PostsState => {
   switch (action.type) {
     case "FETCH_ALL":
       return { ...state, all: action.payload };
+    case "FETCH_POSTS_START":
+      return { ...state, isLoading: true };
     case "FETCH_RECENT":
-      return {
-        ...state,
-        recentPosts: action.payload,
-      };
+      return { ...state, recentPosts: action.payload, isLoading: false };
+    case "FETCH_POSTS_END":
+      return { ...state, isLoading: false };
 
     case "FETCH_USER_POSTS_START":
       return { ...state, isLoading: true };
