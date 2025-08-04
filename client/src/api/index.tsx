@@ -36,6 +36,8 @@ export const fetchPosts = async () => {
   const response = await API.get("/posts");
   return response;
 };
+export const fetchRecentPosts = () => API.get("/posts/recent");
+
 
 export const createPost = (newPost: any) => API.post("/posts", newPost);
 

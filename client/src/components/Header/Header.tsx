@@ -113,7 +113,7 @@ export default function Header() {
             <nav className="hidden md:flex font-montserrat text-text text-lg font-medium">
               <Link
                 to="/auth"
-                className="px-2 py-1 rounded-lg bg-primary text-white font-semibold hover:bg-primary-dark transition duration-300"
+                className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition duration-300"
               >
                 Login
               </Link>

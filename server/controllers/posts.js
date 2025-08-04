@@ -173,3 +173,11 @@ export const getPostsByUserInterests = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch posts by interests." });
   }
 };
+export const getRecentPosts = async (req, res) => {
+  try {
+    const recentPosts = await PostMessage.find().sort({ createdAt: -1 }).limit(5);
+    res.status(200).json(recentPosts);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
