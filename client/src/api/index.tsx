@@ -68,8 +68,9 @@ export const updateUserInterests = (id: string, interests: string[]) =>
   API.patch(`/user/${id}/interests`, { interests });
 export const fetchUserInterests = (id: string) =>
   API.get(`/user/${id}/interests`);
-export const fetchPostsByUserInterests = (userId: string) =>
-  API.get(`/posts/interests/${userId}`);
+export const fetchPostsByUserInterests = (userId: string, page = 1, limit = 10) =>
+  API.get(`/posts/interests/${userId}?page=${page}&limit=${limit}`);
+
 
 
 
