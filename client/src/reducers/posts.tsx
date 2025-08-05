@@ -9,6 +9,7 @@ type PostsState = {
   recentPosts: PostType[];
   lastPostCreatedAt: number | null;
   isLoading: boolean;
+  hasMoreInterestPosts:boolean;
 };
 
 const initialState: PostsState = {
@@ -20,6 +21,7 @@ const initialState: PostsState = {
   recentPosts: [],
   lastPostCreatedAt: null,
   isLoading: false,
+  hasMoreInterestPosts: true,
 };
 
 export default (state = initialState, action: any): PostsState => {
@@ -49,7 +51,19 @@ export default (state = initialState, action: any): PostsState => {
     case "FETCH_INTEREST_POSTS":
       return {
         ...state,
-        filteredByInterests: action.payload,
+        filteredByInterests: action.payload.posts,
+        hasMoreInterestPosts: action.payload.hasMore,
+        isLoading: false,
+      };
+
+    case "APPEND_INTEREST_POSTS":
+      return {
+        ...state,
+        filteredByInterests: [
+          ...state.filteredByInterests,
+          ...action.payload.posts,
+        ],
+        hasMoreInterestPosts: action.payload.hasMore,
         isLoading: false,
       };
     case "ADD_TO_INTEREST_POSTS":

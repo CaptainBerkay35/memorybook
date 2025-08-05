@@ -153,6 +153,7 @@ export const getPostsByTag = async (req, res) => {
 };
 export const getPostsByUserInterests = async (req, res) => {
   const { userId } = req.params;
+  const { page = 1, limit = 10 } = req.query;
 
   try {
     const user = await User.findById(userId);
@@ -161,18 +162,28 @@ export const getPostsByUserInterests = async (req, res) => {
     const interests = user.interests || [];
 
     if (interests.length === 0) {
-      return res.status(200).json([]); // İlgi alanı yoksa boş dön
+      return res.status(200).json({ posts: [], hasMore: false });
     }
 
-    const posts = await PostMessage.find({ tags: { $in: interests } }).sort({
-      createdAt: -1,
+    const startIndex = (Number(page) - 1) * Number(limit);
+
+    const posts = await PostMessage.find({ tags: { $in: interests } })
+      .sort({ createdAt: -1 })
+      .skip(startIndex)
+      .limit(Number(limit));
+
+    const total = await PostMessage.countDocuments({ tags: { $in: interests } });
+
+    res.status(200).json({
+      posts,
+      hasMore: startIndex + posts.length < total,
     });
-    res.status(200).json(posts);
   } catch (error) {
     console.error("Error fetching posts by interests:", error);
     res.status(500).json({ message: "Failed to fetch posts by interests." });
   }
 };
+
 export const getRecentPosts = async (req, res) => {
   try {
     const recentPosts = await PostMessage.find().sort({ createdAt: -1 }).limit(5);

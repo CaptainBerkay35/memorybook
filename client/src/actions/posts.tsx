@@ -143,15 +143,17 @@ export const getPostsByTag = (tag: string) => async (dispatch: Dispatch) => {
     console.error("Error fetching posts by tag:", error);
   }
 };
-export const getPostsByUserInterests = (userId: string) => async (dispatch: Dispatch) => {
+export const getPostsByUserInterests = (userId: string, page = 1) => async (dispatch: Dispatch) => {
   try {
     dispatch({ type: "FETCH_INTEREST_POSTS_START" });
 
-    const { data } = await api.fetchPostsByUserInterests(userId);
+    const { data } = await api.fetchPostsByUserInterests(userId, page);
 
-    dispatch({ type: "FETCH_INTEREST_POSTS", payload: data });
+    dispatch({
+      type: page === 1 ? "FETCH_INTEREST_POSTS" : "APPEND_INTEREST_POSTS",
+      payload: data,
+    });
   } catch (error) {
     console.error("Interest-based posts fetch error:", error);
   }
 };
-
