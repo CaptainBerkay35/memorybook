@@ -9,7 +9,8 @@ type PostsState = {
   recentPosts: PostType[];
   lastPostCreatedAt: number | null;
   isLoading: boolean;
-  hasMoreInterestPosts:boolean;
+  hasMoreInterestPosts: boolean;
+  hasMoreTagPosts: boolean;
 };
 
 const initialState: PostsState = {
@@ -22,6 +23,7 @@ const initialState: PostsState = {
   lastPostCreatedAt: null,
   isLoading: false,
   hasMoreInterestPosts: true,
+  hasMoreTagPosts: true,
 };
 
 export default (state = initialState, action: any): PostsState => {
@@ -85,8 +87,31 @@ export default (state = initialState, action: any): PostsState => {
           (post) => post._id !== action.payload
         ),
       };
+    case "FETCH_BY_TAG_START":
+      return { ...state, isLoading: true };
+
     case "FETCH_BY_TAG":
-      return { ...state, filteredByTag: action.payload };
+      return {
+        ...state,
+        filteredByTag: action.payload.posts,
+        hasMoreTagPosts: action.payload.hasMore,
+        isLoading: false,
+      };
+
+    case "APPEND_BY_TAG":
+      return {
+        ...state,
+        filteredByTag: [...state.filteredByTag, ...action.payload.posts],
+        hasMoreTagPosts: action.payload.hasMore,
+        isLoading: false,
+      };
+
+    case "FETCH_BY_TAG_ERROR":
+      return { ...state, isLoading: false };
+
+    case "RESET_FILTERED_BY_TAG":
+      return { ...state, filteredByTag: [], hasMoreTagPosts: true };
+
     case "CREATE":
       return {
         ...state,
@@ -132,9 +157,6 @@ export default (state = initialState, action: any): PostsState => {
 
     case "RESET_LIKED_POSTS":
       return { ...state, likedPosts: [] };
-
-    case "RESET_FILTERED_BY_TAG":
-      return { ...state, filteredByTag: [] };
 
     default:
       return state;

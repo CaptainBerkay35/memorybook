@@ -135,14 +135,38 @@ export const getLikedPosts = (userId: string) => async (dispatch: Dispatch) => {
     console.error("Liked posts fetch error:", error);
   }
 };
-export const getPostsByTag = (tag: string) => async (dispatch: Dispatch) => {
-  try {
-    const { data } = await api.fetchPostsByTag(tag);
-    dispatch({ type: "FETCH_BY_TAG", payload: data }); // ✅ Doğru action type
-  } catch (error) {
-    console.error("Error fetching posts by tag:", error);
-  }
-};
+export const getPostsByTag =
+  (tag: string, page: number = 1, limit: number = 9) =>
+  async (dispatch: Dispatch) => {
+    try {
+      if (page === 1) {
+        dispatch({ type: "FETCH_BY_TAG_START" });
+      }
+
+      const { data } = await api.fetchPostsByTag(tag, page, limit);
+
+      if (page === 1) {
+        dispatch({
+          type: "FETCH_BY_TAG",
+          payload: {
+            posts: data.posts,
+            hasMore: data.hasMore,
+          },
+        });
+      } else {
+        dispatch({
+          type: "APPEND_BY_TAG",
+          payload: {
+            posts: data.posts,
+            hasMore: data.hasMore,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching posts by tag:", error);
+      dispatch({ type: "FETCH_BY_TAG_ERROR" });
+    }
+  };
 export const getPostsByUserInterests = (userId: string, page = 1) => async (dispatch: Dispatch) => {
   try {
     dispatch({ type: "FETCH_INTEREST_POSTS_START" });
