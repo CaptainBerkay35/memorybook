@@ -143,10 +143,25 @@ export const getLikedPosts = async (req, res) => {
 };
 export const getPostsByTag = async (req, res) => {
   const { tag } = req.params;
+  const { page = 1, limit = 9 } = req.query; // query parametreleri
+  const limitNum = Number(limit);
+  const skip = (Number(page) - 1) * limitNum;
 
   try {
-    const posts = await PostMessage.find({ tags: tag }); // ← Mongo'da array içinde arar
-    res.status(200).json(posts);
+    // Toplam post sayısını al
+    const totalPosts = await PostMessage.countDocuments({ tags: tag });
+
+    // İlgili sayfanın postlarını çek
+    const posts = await PostMessage.find({ tags: tag })
+      .sort({ createdAt: -1 }) // en yeniler üstte
+      .skip(skip)
+      .limit(limitNum);
+
+    res.status(200).json({
+      posts,
+      totalPosts,
+      hasMore: skip + posts.length < totalPosts
+    });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch posts by tag." });
   }
