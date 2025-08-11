@@ -9,7 +9,7 @@ export default function LoadingSpinner() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center py-10">
+    <div className="flex items-center justify-center py-10 w-full">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="64"
