@@ -58,8 +58,19 @@ export const fetchLikedPosts = (userId: string) =>
   API.get(`/posts/liked/${userId}`);
 export const fetchUserById = (userId: string) =>
   API.get(`/user/${userId}`);
-export const fetchPostsByTag = (tag: string, page: number, limit: number = 9) =>
-  API.get(`/posts/tag/${encodeURIComponent(tag)}?page=${page}&limit=${limit}`);
+export const fetchPostsByTag = (
+  tag: string,
+  page: number = 1,
+  limit: number = 9,
+  sortBy: string = "createdAt",
+  order: string = "desc"
+) =>
+  API.get(
+    `/posts/tag/${encodeURIComponent(tag)}?page=${page}&limit=${limit}&sortBy=${encodeURIComponent(
+      sortBy
+    )}&order=${encodeURIComponent(order)}`
+  );
+
 export const updateUserProfile = (id: string, payload: { nickname?: string, profilePicture?: string }) =>
   API.patch(`/user/update-profile/${id}`, payload);
 export const deleteAccount = (id: string) =>

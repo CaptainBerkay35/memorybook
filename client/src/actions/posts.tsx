@@ -136,14 +136,14 @@ export const getLikedPosts = (userId: string) => async (dispatch: Dispatch) => {
   }
 };
 export const getPostsByTag =
-  (tag: string, page: number = 1, limit: number = 9) =>
+  (tag: string, page: number = 1, limit: number = 9, sortBy: string = "createdAt", order: string = "desc") =>
   async (dispatch: Dispatch) => {
     try {
       if (page === 1) {
         dispatch({ type: "FETCH_BY_TAG_START" });
       }
 
-      const { data } = await api.fetchPostsByTag(tag, page, limit);
+      const { data } = await api.fetchPostsByTag(tag, page, limit, sortBy, order);
 
       if (page === 1) {
         dispatch({
@@ -167,6 +167,7 @@ export const getPostsByTag =
       dispatch({ type: "FETCH_BY_TAG_ERROR" });
     }
   };
+
 export const getPostsByUserInterests = (userId: string, page = 1) => async (dispatch: Dispatch) => {
   try {
     dispatch({ type: "FETCH_INTEREST_POSTS_START" });

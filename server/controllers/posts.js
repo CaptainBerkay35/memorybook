@@ -124,7 +124,7 @@ export const getPostsByUser = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const userPosts = await PostMessage.find({ creator: id });
+    const userPosts = await PostMessage.find({ creator: id }).sort({ createdAt: -1 });
     res.status(200).json(userPosts);
   } catch (error) {
     res.status(404).json({ message: "User posts not found" });
@@ -143,29 +143,46 @@ export const getLikedPosts = async (req, res) => {
 };
 export const getPostsByTag = async (req, res) => {
   const { tag } = req.params;
-  const { page = 1, limit = 9 } = req.query; // query parametreleri
-  const limitNum = Number(limit);
-  const skip = (Number(page) - 1) * limitNum;
+  const { page = 1, limit = 9, sortBy = "createdAt", order = "desc" } = req.query;
+
+  const pageNum = Math.max(1, Number(page));
+  const limitNum = Math.max(1, Number(limit));
+  const skip = (pageNum - 1) * limitNum;
+  const sortOrder = order === "asc" ? 1 : -1;
 
   try {
-    // Toplam post sayısını al
-    const totalPosts = await PostMessage.countDocuments({ tags: tag });
+    const match = { tags: tag };
 
-    // İlgili sayfanın postlarını çek
-    const posts = await PostMessage.find({ tags: tag })
-      .sort({ createdAt: -1 }) // en yeniler üstte
-      .skip(skip)
-      .limit(limitNum);
+    const totalPosts = await PostMessage.countDocuments(match);
+
+    // Sort kriterini dinamik oluştur
+    const sortCriteria =
+      sortBy === "createdAt"
+        ? { [sortBy]: sortOrder }
+        : { [sortBy]: sortOrder, createdAt: -1 };
+
+    const pipeline = [
+      { $match: match },
+      { $addFields: { likesCount: { $size: { $ifNull: ["$likes", []] } } } },
+      { $sort: sortCriteria },
+      { $skip: skip },
+      { $limit: limitNum },
+    ];
+
+    const posts = await PostMessage.aggregate(pipeline);
 
     res.status(200).json({
       posts,
       totalPosts,
-      hasMore: skip + posts.length < totalPosts
+      hasMore: skip + posts.length < totalPosts,
     });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch posts by tag." });
+    console.error(error);
+    res.status(500).json({ message: "Sunucu hatası" });
   }
 };
+
+
 export const getPostsByUserInterests = async (req, res) => {
   const { userId } = req.params;
   const { page = 1, limit = 10 } = req.query;
