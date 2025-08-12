@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import TagPage from "./pages/TagPage.tsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "./actions/users.tsx";
 import type { User } from "./types/User.tsx";
@@ -11,8 +11,8 @@ import { injectNavigate } from "./api/index.tsx";
 
 function App() {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
     injectNavigate(navigate);
@@ -24,7 +24,11 @@ function App() {
       const user: User = JSON.parse(storedUser);
       dispatch(setUser(user));
     }
-  }, []);
+    setLoadingUser(false); 
+  }, [dispatch]);
+  if (loadingUser) {
+    return null;
+  }
 
   return (
     <Routes>

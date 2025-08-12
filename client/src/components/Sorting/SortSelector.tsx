@@ -16,9 +16,9 @@ export default function SortSelector({ sortBy, order, onChange }: SortSelectorPr
         }}
         className="border px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="createdAt-desc">En Yeni</option>
-        <option value="createdAt-asc">İlk Yüklenen</option>
-        <option value="likesCount-desc">En Çok Beğenilen</option>
+        <option value="createdAt-desc">Newest</option>
+        <option value="createdAt-asc">Oldest</option>
+        <option value="likesCount-desc">Most Liked</option>
       </select>
     </div>
   );
