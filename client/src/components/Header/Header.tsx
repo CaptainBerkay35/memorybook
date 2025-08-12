@@ -44,7 +44,7 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-white bg-opacity-80 transition-all duration-300 ease-in-out ${
+      className={`sticky top-0 z-50 bg-white bg-opacity-80 transition-all duration-300 ease-in-out h-16 md:h-20 ${
         isSticky
           ? "after:content-[''] after:absolute after:inset-0 after:backdrop-blur-md after:-z-10"
           : ""
@@ -86,10 +86,10 @@ export default function Header() {
                 </h6>
               </div>
               {dropdownOpen && (
-                <div className="absolute left-0 mt-8 w-42 bg-white shadow-md rounded-md overflow-hidden z-50">
+                <div className="absolute left-0 mt-8 w-44 bg-white shadow-2xl rounded-md overflow-hidden z-50">
                   <Link
                     to={`/profile/${user.result?._id }`}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-red-100 font-medium"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 font-medium"
                   >
                     Profile
                   </Link>
