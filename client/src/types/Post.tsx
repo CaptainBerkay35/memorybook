@@ -9,6 +9,7 @@ export type PostType = {
   likes: string[];
   createdAt?: string;
   profilePicture?: string;
+  truncate:boolean;
 };
 export type NewPostType = {
   title: string;

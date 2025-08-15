@@ -21,7 +21,17 @@ export default function EditPostForm({
   setFormData,
 }: Props) {
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const [showToast, setShowToast] = useState(false); // toast kontrolü
+  const [showToast, setShowToast] = useState(false);
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
+    }
+  }, [formData.message]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -46,13 +56,13 @@ export default function EditPostForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave();          // veriyi kaydet
+    onSave(); // veriyi kaydet
     setShowToast(true); // toast göster
   };
 
   const handleToastClose = () => {
     setShowToast(false); // toast gizle
-    onCancel();          // modalı kapat
+    onCancel(); // modalı kapat
   };
 
   if (!isOpen) return null;
@@ -99,12 +109,21 @@ export default function EditPostForm({
             {/* Message */}
             <div className="mb-2">
               <label className="text-xs text-gray-800">Message</label>
-              <input
-                type="text"
+              <textarea
+                ref={textareaRef}
                 name="message"
                 value={formData.message || ""}
-                onChange={handleChange}
-                className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData((prev) => ({ ...prev, message: value }));
+
+                  // Auto resize during typing
+                  e.target.style.height = "auto";
+                  e.target.style.height = e.target.scrollHeight + "px";
+                }}
+                rows={1}
+                className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md resize-none overflow-hidden"
+                placeholder="Write your message..."
               />
             </div>
 

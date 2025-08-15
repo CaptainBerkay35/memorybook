@@ -60,6 +60,17 @@ export default function Form({ isOpen, onClose }: Props) {
 
     setShowSuccess(true);
   };
+  useEffect(() => {
+  if (isOpen) {
+    setPostData({
+      title: "",
+      message: "",
+      tags: [],
+      selectedFile: "",
+      nickname: "",
+    });
+  }
+}, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -94,15 +105,23 @@ export default function Form({ isOpen, onClose }: Props) {
           </div>
           <div className="mb-2">
             <label className="text-xs text-gray-800">Message</label>
-            <input
-              type="text"
+            <textarea
               name="message"
               value={postData.message}
-              onChange={(e) =>
-                setPostData({ ...postData, message: e.target.value })
-              }
-              className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md"
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  setPostData({ ...postData, message: e.target.value });
+                }
+                e.target.style.height = "auto"; 
+                e.target.style.height = e.target.scrollHeight + "px"; 
+              }}
+              rows={1}
+              className="block w-full bg-gray-200 text-sm px-2 py-1 border border-gray-400 rounded-md resize-none overflow-hidden"
+              placeholder="Write your message..."
             />
+            <p className="text-xs text-gray-500 text-right">
+              {postData.message.length}/500
+            </p>
           </div>
           <div className="mb-4">
             <ImageUpload
