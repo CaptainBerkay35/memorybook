@@ -18,6 +18,7 @@ type PostProps = {
   onPostClick?: () => void;
   onClose?: () => void;
   mb?: string;
+  truncate?: boolean;
 };
 
 export default function Post({
@@ -25,6 +26,7 @@ export default function Post({
   onPostClick,
   onClose,
   mb = "mb-6",
+  truncate = false,
 }: PostProps) {
   const dispatch: AppDispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
@@ -32,6 +34,13 @@ export default function Post({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useSelector((state: RootState) => state.user);
   const hasLikedPost = user && post.likes.includes(user.result?._id);
+
+  const [expanded, setExpanded] = useState(false);
+
+  const messageToShow =
+    truncate && !expanded
+      ? post.message.split("\n").slice(0, 2).join("\n") // sadece 2 satır göster
+      : post.message;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,8 +82,7 @@ export default function Post({
     if (diffMinutes < 1) return "just now";
     if (diffMinutes < 60)
       return `${diffMinutes}m${diffMinutes !== 1 ? "" : ""} ago`;
-    if (diffHours < 24)
-      return `${diffHours}h${diffHours !== 1 ? "" : ""} ago`;
+    if (diffHours < 24) return `${diffHours}h${diffHours !== 1 ? "" : ""} ago`;
     return `${diffDays}d${diffDays !== 1 ? "" : ""} ago`;
   }
 
@@ -196,21 +204,40 @@ export default function Post({
           </div>
         </div>
 
-        {/* Content Section */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div className="flex-1">
-            <h2 className="text-lg md:text-xl font-semibold text-gray-800 break-words">
-              {post.title}
-            </h2>
-            <p className="text-sm md:text-base text-gray-600 mt-2 break-words whitespace-pre-line">
-              {post.message}
-            </p>
-          </div>
-          {post.createdAt && (
-            <div className="text-xs text-gray-400 items-end justify-end">
-              {getTimeAgo(post.createdAt)}
+            <div className="flex justify-between">
+              <h2 className="text-lg md:text-xl font-semibold text-gray-800 break-words">
+                {post.title}
+              </h2>
+
+              {post.createdAt && (
+                <div className="text-xs text-gray-400 items-end justify-end">
+                  {getTimeAgo(post.createdAt)}
+                </div>
+              )}
             </div>
-          )}
+
+            <p
+              className={`text-sm md:text-base text-gray-600 mt-2 break-words ${
+                truncate && !expanded ? "line-clamp-1" : ""
+              } text-justify`}
+            >
+              {post.message}
+            </p>  
+
+            {truncate && post.message.split("\n").length > 1 && !expanded && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onPostClick) onPostClick();
+                }}
+                className="text-blue-500 text-sm mt-1"
+              >
+                Expand more
+              </button>
+            )}
+          </div>
         </div>
       </>
       {editMode && (

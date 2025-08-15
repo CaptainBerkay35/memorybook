@@ -75,6 +75,7 @@ export default function TagPage() {
                 key={post._id}
                 post={post}
                 onPostClick={() => setSelectedPostId(post._id)}
+                truncate={true}
               />
             ))}
           </div>
