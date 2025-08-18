@@ -10,4 +10,5 @@ export type User = {
 export type UserState = {
   result: User;
   token: string;
+  _id: string;
 };
