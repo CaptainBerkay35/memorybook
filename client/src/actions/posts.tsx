@@ -4,7 +4,6 @@ import type { NewPostType, EditablePostFields } from "../types/Post";
 import type { ThunkDispatch } from "redux-thunk";
 import type { RootState } from "../store/store";
 
-
 export const getPosts = () => async (dispatch: Dispatch) => {
   try {
     const { data } = await api.fetchPosts();
@@ -15,17 +14,21 @@ export const getPosts = () => async (dispatch: Dispatch) => {
 };
 export const getRecentPosts = () => async (dispatch: Dispatch) => {
   try {
-    dispatch({ type: "FETCH_POSTS_START" });  
+    dispatch({ type: "FETCH_POSTS_START" });
     const { data } = await api.fetchRecentPosts();
     dispatch({ type: "FETCH_RECENT", payload: data });
   } catch (error) {
     console.error(error);
   } finally {
-    dispatch({ type: "FETCH_POSTS_END" }); 
+    dispatch({ type: "FETCH_POSTS_END" });
   }
 };
-export const createPost = (post: NewPostType) =>
-  async (dispatch: ThunkDispatch<RootState, void, any>, getState: () => RootState) => {
+export const createPost =
+  (post: NewPostType) =>
+  async (
+    dispatch: ThunkDispatch<RootState, void, any>,
+    getState: () => RootState
+  ) => {
     try {
       const { data } = await api.createPost(post);
       dispatch({ type: "CREATE", payload: data });
@@ -40,6 +43,10 @@ export const createPost = (post: NewPostType) =>
       if (matchesInterest) {
         dispatch({ type: "ADD_TO_INTEREST_POSTS", payload: data });
       }
+      const profileUserId = getState().userProfile.profile?._id;
+      if (data.creator === profileUserId) {
+        dispatch({ type: "ADD_USER_POST", payload: data });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +54,10 @@ export const createPost = (post: NewPostType) =>
 
 export const updatePost =
   (id: string, postData: EditablePostFields) =>
-  async (dispatch: ThunkDispatch<RootState, void, any>, getState: () => RootState) => {
+  async (
+    dispatch: ThunkDispatch<RootState, void, any>,
+    getState: () => RootState
+  ) => {
     try {
       const { data } = await api.updatePost(id, postData);
       dispatch({ type: "UPDATE", payload: data });
@@ -71,7 +81,11 @@ export const updatePost =
   };
 
 export const deletePost =
-  (id: string) => async (dispatch: ThunkDispatch<RootState, void, any>, getState: () => RootState) => {
+  (id: string) =>
+  async (
+    dispatch: ThunkDispatch<RootState, void, any>,
+    getState: () => RootState
+  ) => {
     try {
       await api.deletePost(id);
       dispatch({ type: "DELETE", payload: id });
@@ -79,8 +93,12 @@ export const deletePost =
       const state = getState();
       const userInterests = state.user?.result?.interests || [];
 
-      const deletedPost = state.posts.filteredByInterests.find((post) => post._id === id);
-      const matchesInterest = deletedPost?.tags?.some((tag) => userInterests.includes(tag));
+      const deletedPost = state.posts.filteredByInterests.find(
+        (post) => post._id === id
+      );
+      const matchesInterest = deletedPost?.tags?.some((tag) =>
+        userInterests.includes(tag)
+      );
 
       if (matchesInterest) {
         dispatch({ type: "DELETE_INTEREST_POST", payload: id });
@@ -91,7 +109,11 @@ export const deletePost =
   };
 
 export const likePost =
-  (id: string) => async (dispatch: ThunkDispatch<RootState, void, any>, getState: () => RootState) => {
+  (id: string) =>
+  async (
+    dispatch: ThunkDispatch<RootState, void, any>,
+    getState: () => RootState
+  ) => {
     try {
       const { data } = await api.likePost(id);
       dispatch({ type: "UPDATE", payload: data });
@@ -117,16 +139,17 @@ export const likePost =
     }
   };
 
-export const getPostsByUser = (userId: string) => async (dispatch: Dispatch) => {
-  try {
-    dispatch({ type: "FETCH_USER_POSTS_START" });
-    const { data } = await api.fetchPostsByUser(userId);
-    dispatch({ type: "FETCH_USER_POSTS", payload: data });
-  } catch (error) {
-    console.error("User posts fetch error:", error);
-    dispatch({ type: "FETCH_USER_POSTS_ERROR" });
-  }
-};
+export const getPostsByUser =
+  (userId: string) => async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: "FETCH_USER_POSTS_START" });
+      const { data } = await api.fetchPostsByUser(userId);
+      dispatch({ type: "FETCH_USER_POSTS", payload: data });
+    } catch (error) {
+      console.error("User posts fetch error:", error);
+      dispatch({ type: "FETCH_USER_POSTS_ERROR" });
+    }
+  };
 export const getLikedPosts = (userId: string) => async (dispatch: Dispatch) => {
   try {
     const { data } = await api.fetchLikedPosts(userId);
@@ -136,14 +159,26 @@ export const getLikedPosts = (userId: string) => async (dispatch: Dispatch) => {
   }
 };
 export const getPostsByTag =
-  (tag: string, page: number = 1, limit: number = 9, sortBy: string = "createdAt", order: string = "desc") =>
+  (
+    tag: string,
+    page: number = 1,
+    limit: number = 9,
+    sortBy: string = "createdAt",
+    order: string = "desc"
+  ) =>
   async (dispatch: Dispatch) => {
     try {
       if (page === 1) {
         dispatch({ type: "FETCH_BY_TAG_START" });
       }
 
-      const { data } = await api.fetchPostsByTag(tag, page, limit, sortBy, order);
+      const { data } = await api.fetchPostsByTag(
+        tag,
+        page,
+        limit,
+        sortBy,
+        order
+      );
 
       if (page === 1) {
         dispatch({
@@ -168,17 +203,19 @@ export const getPostsByTag =
     }
   };
 
-export const getPostsByUserInterests = (userId: string, page = 1) => async (dispatch: Dispatch) => {
-  try {
-    dispatch({ type: "FETCH_INTEREST_POSTS_START" });
+export const getPostsByUserInterests =
+  (userId: string, page = 1) =>
+  async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: "FETCH_INTEREST_POSTS_START" });
 
-    const { data } = await api.fetchPostsByUserInterests(userId, page);
+      const { data } = await api.fetchPostsByUserInterests(userId, page);
 
-    dispatch({
-      type: page === 1 ? "FETCH_INTEREST_POSTS" : "APPEND_INTEREST_POSTS",
-      payload: data,
-    });
-  } catch (error) {
-    console.error("Interest-based posts fetch error:", error);
-  }
-};
+      dispatch({
+        type: page === 1 ? "FETCH_INTEREST_POSTS" : "APPEND_INTEREST_POSTS",
+        payload: data,
+      });
+    } catch (error) {
+      console.error("Interest-based posts fetch error:", error);
+    }
+  };

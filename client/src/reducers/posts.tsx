@@ -115,8 +115,6 @@ export default (state = initialState, action: any): PostsState => {
     case "CREATE":
       return {
         ...state,
-        all: [...state.all, action.payload],
-        userPosts: [...state.userPosts, action.payload],
         lastPostCreatedAt: Date.now(),
       };
     case "UPDATE":
@@ -150,6 +148,11 @@ export default (state = initialState, action: any): PostsState => {
         filteredByTag: state.filteredByTag.filter(
           (post) => post._id !== action.payload
         ),
+      };
+    case "ADD_USER_POST":
+      return {
+        ...state,
+        userPosts: [action.payload, ...state.userPosts],
       };
 
     case "RESET_USER_POSTS":
