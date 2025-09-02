@@ -10,7 +10,7 @@ import { Provider } from "react-redux";
 import store from "./store/store.tsx";
 import { BrowserRouter } from "react-router-dom";
 
-import AppWrapper from "./components/AppWrapper.tsx"; // Yol sana göre değişebilir
+import AppWrapper from "./components/AppWrapper.tsx"; 
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

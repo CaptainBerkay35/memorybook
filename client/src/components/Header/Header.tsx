@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/users";
 import { MemoryBookIcon, NewPostIcon } from "../../assets/icons";
@@ -11,6 +11,7 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate(); 
 
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -40,6 +41,7 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     dispatch(logout());
+    navigate("/auth");
   };
 
   return (

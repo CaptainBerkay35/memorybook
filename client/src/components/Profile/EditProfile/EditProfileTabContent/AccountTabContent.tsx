@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { logout } from "../../../../actions/users.tsx";
 import DeleteAccountButton from "../DeleteAccountButton.tsx";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   onClose: () => void;
@@ -8,10 +9,13 @@ type Props = {
 
 export default function AccountTabContent({ onClose }: Props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem("user");
     dispatch(logout());
     onClose();
+    navigate("/auth");
   };
 
   return (

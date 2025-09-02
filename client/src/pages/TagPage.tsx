@@ -40,9 +40,9 @@ export default function TagPage() {
 
   return (
     <MainLayout>
-      <div className="p-4 min-h-screen bg-white w-full max-w-6xl mx-auto">
+      <div className=" min-h-screen bg-white w-full max-w-6xl mx-auto">
         <div
-          className="flex flex-col md:flex-row md:items-center md:justify-between mb-4"
+          className="flex flex-col gap-2 md:gap-0 md:flex-row md:items-center md:justify-between md:mb-4"
           style={{ minHeight: "56px" }}
         >
           <h2 className="text-2xl md:text-3xl font-bold text-neutral-700">
