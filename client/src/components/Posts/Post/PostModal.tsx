@@ -40,7 +40,7 @@ if (!post) {
     >
       <button
         onClick={onClose}
-        className="fixed top-4 right-4 text-gray-200 hover:text-white text-2xl z-[60]"
+        className="hidden md:block fixed top-4 right-4 text-gray-200 hover:text-white text-2xl z-[60]"
       >
         <CloseIcon />
       </button>
